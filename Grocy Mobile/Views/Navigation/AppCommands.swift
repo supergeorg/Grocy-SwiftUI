@@ -70,3 +70,25 @@ struct AppCommands: Commands {
         }
     }
 }
+
+#if os(macOS)
+    /// The Mac windows besides the main window and the Settings.
+    enum AppWindow {
+        static let appLog = "appLog"
+        static let about = "about"
+    }
+
+    /// The app menu's "About" opens the app's own information (with the translators and the thanks to Grocy),
+    /// instead of the standard panel.
+    struct AboutCommands: Commands {
+        @Environment(\.openWindow) private var openWindow
+
+        var body: some Commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About Grocy Mobile") {
+                    openWindow(id: AppWindow.about)
+                }
+            }
+        }
+    }
+#endif

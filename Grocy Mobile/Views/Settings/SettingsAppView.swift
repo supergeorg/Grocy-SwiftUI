@@ -173,7 +173,7 @@ struct SettingsAppView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("App settings")
+        .navigationTitle("General")
     }
 }
 

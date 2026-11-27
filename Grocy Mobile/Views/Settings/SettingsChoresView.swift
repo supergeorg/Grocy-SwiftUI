@@ -32,7 +32,7 @@ struct SettingsChoresView: View {
             )
         }
         .formStyle(.grouped)
-        .navigationTitle("Chores settings")
+        .navigationTitle("Chores")
         .onDisappear(perform: {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])

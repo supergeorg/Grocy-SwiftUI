@@ -367,24 +367,46 @@ struct Grocy_MobileApp: App {
         .commands {
             SidebarCommands()
             AppCommands()
+            #if os(macOS)
+                AboutCommands()
+            #endif
         }
         #if os(macOS)
             Settings {
                 if !onboardingNeeded, isLoggedIn {
-                    NavigationStack {
-                        SettingsView()
-                    }
-                    .grocyFeatures()
-                    .modelContainer(modelContainer)
-                    .modelContainer(profileModelContainer)
-                    .environment(grocyVM)
-                    .environment(\.profileModelContext, profileModelContainer.mainContext)
-                    .environment(\.profileModelContainer, profileModelContainer)
-                    .environment(\.locale, Locale(identifier: localizationKey))
+                    withAppEnvironment(MacSettingsView())
                 }
             }
+
+            // Mac apps show their log and their information in windows of their own, not in the settings.
+            // The log is in the Window menu, the information replaces the app menu's standard "About" panel (AboutCommands).
+            Window("App log", id: AppWindow.appLog) {
+                withAppEnvironment(NavigationStack { LogView() })
+            }
+            .defaultSize(width: Constants.macOSAuxiliaryWindowWidth, height: Constants.macOSAuxiliaryWindowHeight)
+
+            Window("About this app", id: AppWindow.about) {
+                withAppEnvironment(NavigationStack { AboutView() })
+            }
+            .defaultSize(width: Constants.macOSAuxiliaryWindowWidth, height: Constants.macOSAuxiliaryWindowHeight)
+            .windowResizability(.contentMinSize)
+            .commandsRemoved()
         #endif
     }
+
+    #if os(macOS)
+        /// The data and settings every window needs, like the main window gets them from the scene.
+        private func withAppEnvironment(_ content: some View) -> some View {
+            content
+                .grocyFeatures()
+                .modelContainer(modelContainer)
+                .modelContainer(profileModelContainer)
+                .environment(grocyVM)
+                .environment(\.profileModelContext, profileModelContainer.mainContext)
+                .environment(\.profileModelContainer, profileModelContainer)
+                .environment(\.locale, Locale(identifier: localizationKey))
+        }
+    #endif
 }
 
 extension ModelContainer {

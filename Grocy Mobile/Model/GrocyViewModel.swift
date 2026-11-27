@@ -137,6 +137,12 @@ class GrocyViewModel {
         return (try? modelContext.fetch(descriptor))?.first
     }
 
+    /// The server's host name (or the demo server's), to name the server in the settings. Nil when not logged in.
+    var serverDisplayName: String? {
+        guard isLoggedIn, let urlString = isDemoModus ? demoServerURL : selectedServerProfile?.grocyServerURL else { return nil }
+        return URL(string: urlString)?.host() ?? urlString
+    }
+
     /// True when the app only hosts the unit tests. Xcode sets this variable for a hosted test bundle, not for the app
     /// that UI tests launch.
     nonisolated static var isUnitTestHost: Bool {

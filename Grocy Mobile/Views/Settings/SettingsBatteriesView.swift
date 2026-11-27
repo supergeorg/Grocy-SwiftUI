@@ -23,7 +23,7 @@ struct SettingsBatteriesView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Batteries settings")
+        .navigationTitle("Batteries")
         .onDisappear {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])

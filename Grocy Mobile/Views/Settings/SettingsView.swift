@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 enum SettingsNavigationItem: Hashable {
+    /// The signed-in user and the server, with reset cache and logout, like the account at the top of the system settings.
+    case account
     case serverInfo
     case userInfo
     case appSettings
@@ -52,99 +54,68 @@ struct SettingsView: View {
     }
 
     private var content: some View {
+        // Like the system settings: the account on top, then the app's own settings, then one page per area,
+        // each named like the area, then help and information.
         List {
             if isLoggedIn {
-                Section("Grocy") {
-                    NavigationLink(value: SettingsNavigationItem.serverInfo) {
-                        Label("Information about Grocy Server", systemImage: MySymbols.info)
-                            .foregroundStyle(.primary)
+                Section {
+                    NavigationLink(value: SettingsNavigationItem.account) {
+                        SettingsAccountRow()
                     }
-                    if let currentUser = grocyVM.currentUser {
-                        NavigationLink(value: SettingsNavigationItem.userInfo) {
-                            Label("Logged in as user \(currentUser.displayName)", systemImage: MySymbols.user)
-                                .foregroundStyle(.primary)
-                        }
-                    }
-                    Button(
-                        action: {
-                            grocyVM.deleteAllCachedData()
-                        },
-                        label: {
-                            Label("Reset cache", systemImage: MySymbols.delete)
-                                .foregroundStyle(.primary)
-                        }
-                    )
-                    // The destructive role colors the button, instead of a hard-coded red label.
-                    Button(
-                        role: .destructive,
-                        action: {
-                            grocyVM.logout()
-                        },
-                        label: {
-                            Label("Logout", systemImage: MySymbols.logout)
-                        }
-                    )
                 }
             }
 
-            Section("Grocy settings") {
+            Section {
                 NavigationLink(value: SettingsNavigationItem.appSettings) {
-                    Label("App settings", systemImage: MySymbols.app)
-                        .foregroundStyle(.primary)
+                    ListRowLabel("General", systemImage: MySymbols.settings)
                 }
-                // Like Grocy's own settings, an area the server turned off has no settings page.
+            }
+
+            // Like Grocy's own settings, an area the server turned off has no settings page.
+            Section {
                 if systemConfig?.featureFlagStock != false {
                     NavigationLink(value: SettingsNavigationItem.stockSettings) {
-                        Label("Stock settings", systemImage: MySymbols.stockOverview)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Stock", systemImage: MySymbols.stockOverview)
                     }
                 }
                 if systemConfig?.featureFlagShoppinglist != false {
                     NavigationLink(value: SettingsNavigationItem.shoppingListSettings) {
-                        Label("Shopping list settings", systemImage: MySymbols.shoppingList)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Shopping list", systemImage: MySymbols.shoppingList)
                     }
                 }
                 if systemConfig?.featureFlagChores != false {
                     NavigationLink(value: SettingsNavigationItem.choresSettings) {
-                        Label("Chores settings", systemImage: MySymbols.chores)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Chores", systemImage: MySymbols.chores)
                     }
                 }
                 if systemConfig?.featureFlagTasks != false {
                     NavigationLink(value: SettingsNavigationItem.tasksSettings) {
-                        Label("Tasks settings", systemImage: MySymbols.tasks)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Tasks", systemImage: MySymbols.tasks)
                     }
                 }
                 if systemConfig?.featureFlagBatteries != false {
                     NavigationLink(value: SettingsNavigationItem.batteriesSettings) {
-                        Label("Batteries settings", systemImage: MySymbols.batteries)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Batteries", systemImage: MySymbols.batteries)
                     }
                 }
                 if systemConfig?.featureFlagRecipes != false {
                     NavigationLink(value: SettingsNavigationItem.recipesSettings) {
-                        Label("Recipes settings", systemImage: MySymbols.recipe)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Recipes", systemImage: MySymbols.recipe)
                     }
                 }
                 if systemConfig?.featureFlagRecipes != false && systemConfig?.featureFlagRecipesMealplan != false {
                     NavigationLink(value: SettingsNavigationItem.mealPlanSettings) {
-                        Label("Meal plan settings", systemImage: MySymbols.mealPlan)
-                            .foregroundStyle(.primary)
+                        ListRowLabel("Meal plan", systemImage: MySymbols.mealPlan)
                     }
                 }
             }
 
-            Section("App") {
+            Section {
                 NavigationLink(value: SettingsNavigationItem.appLog) {
-                    Label("App log", systemImage: MySymbols.logFile)
-                        .foregroundStyle(.primary)
+                    ListRowLabel("App log", systemImage: MySymbols.logFile)
                 }
                 NavigationLink(value: SettingsNavigationItem.aboutApp) {
-                    Label("About this app", systemImage: MySymbols.info)
-                        .foregroundStyle(.primary)
+                    ListRowLabel("About this app", systemImage: MySymbols.info)
                 }
             }
         }
@@ -152,6 +123,32 @@ struct SettingsView: View {
         .task {
             await grocyVM.requestData(additionalObjects: [.system_info, .current_user])
         }
+    }
+}
+
+/// The account at the top of the settings: the user's picture and name, and the server, like the system settings.
+private struct SettingsAccountRow: View {
+    @Environment(GrocyViewModel.self) private var grocyVM
+
+    var body: some View {
+        HStack(spacing: Spacing.medium) {
+            UserAvatarView(pictureFileName: grocyVM.currentUser?.pictureFileName, size: Sizes.avatar)
+            VStack(alignment: .leading) {
+                if let user = grocyVM.currentUser {
+                    Text(user.displayName.isEmpty ? user.username : user.displayName)
+                        .font(.headline)
+                } else {
+                    Text("Account")
+                        .font(.headline)
+                }
+                if let server = grocyVM.serverDisplayName {
+                    Text(verbatim: server)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -163,6 +160,8 @@ private struct SettingsDestinationView: View {
 
     var body: some View {
         switch destination {
+        case .account:
+            SettingsAccountView()
         case .serverInfo:
             GrocyInfoView(systemInfo: grocyVM.systemInfo)
         case .userInfo:
