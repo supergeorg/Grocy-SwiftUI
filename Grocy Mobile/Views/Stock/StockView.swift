@@ -318,12 +318,17 @@ struct StockView: View {
         cachedMissingStock = elements
     }
 
+    // The cache can still hold elements a sync removed since it was computed (their product left the stock);
+    // their attributes can't be read anymore, so they're left out until the next computation.
     var filteredAndSearchedStock: [StockElement] {
-        cachedFilteredStock
+        cachedFilteredStock.filter { !$0.isRemoved }
     }
 
     var groupedStock: [AnyHashable: [StockElement]] {
-        cachedGroupedStock
+        cachedGroupedStock.compactMapValues { elements in
+            let live = elements.filter { !$0.isRemoved }
+            return live.isEmpty ? nil : live
+        }
     }
 
     private func computeFilteredAndGroupedStock() {
@@ -367,6 +372,8 @@ struct StockView: View {
             let allStock = stock + missingStock
 
             for element in allStock {
+                // A sync may have removed the element since it was captured; reading it would crash.
+                guard !element.isRemoved else { continue }
                 // Quick reject checks
                 guard !(element.product?.hideOnStockOverview ?? false) else { continue }
 

@@ -81,6 +81,20 @@ struct SwiftDataSyncTests {
         #expect(stored.map(\.productID) == [2])
     }
 
+    @Test("A stock element the sync deleted is marked removed, a live or display-only one isn't")
+    func removedStockElementIsMarked() throws {
+        try sync.syncStockElements([try stockElement(productID: 1), try stockElement(productID: 2)])
+        let elements = try context.fetch(FetchDescriptor<StockElement>(sortBy: [SortDescriptor(\.productID)]))
+        let leaving = try #require(elements.first { $0.productID == 1 })
+        let staying = try #require(elements.first { $0.productID == 2 })
+        #expect(!leaving.isRemoved)
+
+        try sync.syncStockElements([try stockElement(productID: 2)])
+        #expect(leaving.isRemoved)
+        #expect(!staying.isRemoved)
+        #expect(!StockElement(notInStock: MDProduct(id: 3, name: "Not in stock")).isRemoved)
+    }
+
     @Test("Updating a product keeps the stock element's link to it")
     func productUpdateKeepsStockLink() throws {
         try sync.syncPersistentCollection([MDProduct(id: 1, name: "Milk")])
