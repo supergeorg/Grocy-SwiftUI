@@ -37,8 +37,18 @@ struct MDQuantityUnitFormView: View {
         return !(quantityUnit.name.isEmpty || (foundQuantityUnit != nil && foundQuantityUnit!.id != quantityUnit.id))
     }
 
-    init(existingQuantityUnit: MDQuantityUnit? = nil, name: String = "", namePlural: String = "", createdQuantityUnitID: Binding<Int?> = .constant(nil)) {
+    /// Shown in a sheet, which needs a Cancel button also where the lists push the form.
+    private let isPopup: Bool
+
+    init(
+        existingQuantityUnit: MDQuantityUnit? = nil,
+        name: String = "",
+        namePlural: String = "",
+        createdQuantityUnitID: Binding<Int?> = .constant(nil),
+        isPopup: Bool = false
+    ) {
         self.existingQuantityUnit = existingQuantityUnit
+        self.isPopup = isPopup
         self.quantityUnit = existingQuantityUnit ?? MDQuantityUnit(name: name, namePlural: namePlural)
         _createdQuantityUnitID = createdQuantityUnitID
     }
@@ -213,7 +223,7 @@ struct MDQuantityUnitFormView: View {
             await updateData()
         }
         .toolbar(content: {
-            if existingQuantityUnit == nil {
+            if existingQuantityUnit == nil, isPopup || !FormPresentation.createFormIsPushed {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

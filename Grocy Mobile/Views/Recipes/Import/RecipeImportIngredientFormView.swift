@@ -218,7 +218,8 @@ struct RecipeImportIngredientFormView: View {
                     userSettings: userSettingsList.first,
                     productName: ingredient.line.name,
                     createdProductID: $createdProductID,
-                    suggester: productSuggester
+                    suggester: productSuggester,
+                    isPopup: true
                 )
             }
         }
@@ -235,7 +236,8 @@ struct RecipeImportIngredientFormView: View {
                     MDQuantityUnitFormView(
                         name: ingredient.newUnitName,
                         namePlural: ingredient.newUnitNamePlural,
-                        createdQuantityUnitID: $createdQuantityUnitID
+                        createdQuantityUnitID: $createdQuantityUnitID,
+                        isPopup: true
                     )
                 }
             }

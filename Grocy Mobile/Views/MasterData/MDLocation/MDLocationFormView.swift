@@ -115,7 +115,7 @@ struct MDLocationFormView: View {
         }
         .navigationTitle(existingLocation == nil ? "Create location" : "Edit location")
         .toolbar(content: {
-            if existingLocation == nil {
+            if existingLocation == nil, !FormPresentation.createFormIsPushed {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

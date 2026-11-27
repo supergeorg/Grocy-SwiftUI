@@ -131,7 +131,7 @@ struct MDBatteryFormView: View {
         }
         .navigationTitle(existingBattery == nil ? "Create battery" : "Edit battery")
         .toolbar {
-            if existingBattery == nil || isPopup {
+            if (existingBattery == nil && !FormPresentation.createFormIsPushed) || isPopup {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel) {
                         finishForm()

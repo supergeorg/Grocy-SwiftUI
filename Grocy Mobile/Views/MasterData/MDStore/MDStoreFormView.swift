@@ -112,7 +112,7 @@ struct MDStoreFormView: View {
         }
         .navigationTitle(existingStore == nil ? "Create store" : "Edit store")
         .toolbar(content: {
-            if existingStore == nil {
+            if existingStore == nil, !FormPresentation.createFormIsPushed {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

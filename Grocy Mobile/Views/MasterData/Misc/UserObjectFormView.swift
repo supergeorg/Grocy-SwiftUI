@@ -53,7 +53,7 @@ struct UserObjectFormView: View {
         .formStyle(.grouped)
         .navigationTitle(userEntity.caption)
         .toolbar {
-            if existingUserObject == nil {
+            if existingUserObject == nil, !FormPresentation.createFormIsPushed {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel) {
                         dismiss()
