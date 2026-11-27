@@ -76,7 +76,7 @@ import SwiftUI
                 content()
                     .settingsDestinations()
             }
-            .frame(width: Constants.macOSSettingsWidth, height: Constants.macOSSettingsHeight)
+            .frame(width: Sizes.macOSSettingsWidth, height: Sizes.macOSSettingsHeight)
         }
     }
 

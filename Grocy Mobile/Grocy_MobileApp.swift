@@ -383,12 +383,12 @@ struct Grocy_MobileApp: App {
             Window("App log", id: AppWindow.appLog) {
                 withAppEnvironment(NavigationStack { LogView() })
             }
-            .defaultSize(width: Constants.macOSAuxiliaryWindowWidth, height: Constants.macOSAuxiliaryWindowHeight)
+            .defaultSize(width: Sizes.macOSAuxiliaryWindowWidth, height: Sizes.macOSAuxiliaryWindowHeight)
 
             Window("About this app", id: AppWindow.about) {
                 withAppEnvironment(NavigationStack { AboutView() })
             }
-            .defaultSize(width: Constants.macOSAuxiliaryWindowWidth, height: Constants.macOSAuxiliaryWindowHeight)
+            .defaultSize(width: Sizes.macOSAuxiliaryWindowWidth, height: Sizes.macOSAuxiliaryWindowHeight)
             .windowResizability(.contentMinSize)
             .commandsRemoved()
         #endif
