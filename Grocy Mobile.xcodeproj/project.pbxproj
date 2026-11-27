@@ -11,7 +11,7 @@
 		789BAF392EE444FB00C82475 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1D2EE444AC00C82475 /* WidgetKit.framework */; };
 		789BAF3A2EE444FB00C82475 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789BAF1F2EE444AC00C82475 /* SwiftUI.framework */; };
 		789BAF472EE444FB00C82475 /* Grocy WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 789BAF382EE444FB00C82475 /* Grocy WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		78D0E37630B674C600FF487D /* Grocy Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		78D0E37630B674C600FF487D /* Grocy Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 78D0E35830B674C500FF487D /* Grocy Watch Watch App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -599,6 +599,7 @@
 		};
 		78D0E37530B674C600FF487D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 78D0E35730B674C500FF487D /* Grocy Watch Watch App */;
 			targetProxy = 78D0E37430B674C600FF487D /* PBXContainerItemProxy */;
 		};
