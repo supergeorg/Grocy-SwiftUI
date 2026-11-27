@@ -31,7 +31,7 @@ struct SettingsRecipesView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Recipes settings")
+        .navigationTitle(SettingsNavigationItem.recipesSettings.title)
         .onDisappear {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])

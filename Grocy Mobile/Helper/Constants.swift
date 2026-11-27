@@ -10,8 +10,13 @@ import Foundation
 struct Constants {
     #if os(macOS)
         static let macOSNavWidth: CGFloat = 300.0
-        static let macOSSettingsWidth: CGFloat = 500.0
-        static let macOSSettingsHeight: CGFloat = 400.0
+        /// The Settings window: wide enough for a tab per area in its toolbar.
+        static let macOSSettingsWidth: CGFloat = 700.0
+        static let macOSSettingsHeight: CGFloat = 520.0
+        static let macOSSettingsMinHeight: CGFloat = 360.0
+        /// The app log's and the about window's first size.
+        static let macOSAuxiliaryWindowWidth: CGFloat = 620.0
+        static let macOSAuxiliaryWindowHeight: CGFloat = 560.0
         static let macOSMinWindowWidth: CGFloat = 500.0
         static let macOSStockEntriesMinWidth: CGFloat = 350.0
         /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.

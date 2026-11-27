@@ -65,21 +65,24 @@ struct LogView: View {
             }
         }
         .navigationTitle("App log")
-        #if os(iOS)
-            .toolbar(content: {
-                ToolbarItemGroup(
-                    placement: .automatic,
-                    content: {
-                        Button(
-                            action: {
-                                shareFile()
-                            },
-                            label: { Image(systemName: MySymbols.share) }
-                        )
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                #if os(macOS)
+                    // A Mac list has no pull to refresh.
+                    Button {
+                        Task { await grocyVM.getLogEntries() }
+                    } label: {
+                        Label("Reload", systemImage: MySymbols.reload)
                     }
-                )
-            })
-        #endif
+                    .keyboardShortcut("r")
+                #endif
+                Button {
+                    shareFile()
+                } label: {
+                    Label("Share", systemImage: MySymbols.share)
+                }
+            }
+        }
         .task {
             isLoadingLog = true
             await grocyVM.getLogEntries()

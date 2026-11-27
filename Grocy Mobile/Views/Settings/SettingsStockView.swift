@@ -148,7 +148,7 @@ struct SettingsStockView: View {
             }
         }
         .formStyle(.grouped)
-        .navigationTitle("Stock settings")
+        .navigationTitle(SettingsNavigationItem.stockSettings.title)
         .task {
             if isFirst {
                 await grocyVM.requestData(objects: dataToUpdate)

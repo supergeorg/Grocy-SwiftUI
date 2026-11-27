@@ -65,7 +65,7 @@ extension View {
     /// (Registered on the pushed page itself, the master data and settings destinations aren't always found.)
     func accountNavigationDestinations() -> some View {
         masterDataDestinations()
-            .settingsNavigationDestinations()
+            .settingsDestinations()
             .navigationDestination(for: AccountView.Route.self) { route in
                 switch route {
                 case .account:

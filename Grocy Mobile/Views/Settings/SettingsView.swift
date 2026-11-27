@@ -30,10 +30,6 @@ struct SettingsView: View {
 
     @Environment(\.dismiss) var dismiss
 
-    /// False when the navigation stack's root registers the settings pages already (`accountNavigationDestinations()`):
-    /// in the iPhone tab navigation, registered on this pushed page, they weren't always found (e.g. on the due tab).
-    var registersDestinations: Bool = true
-
     @State private var selection: SettingsNavigationItem? = nil
 
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
@@ -43,112 +39,110 @@ struct SettingsView: View {
     /// The server's feature flags. Until the config is loaded, every area is shown.
     private var systemConfig: SystemConfig? { systemConfigList.first }
 
+    /// False where the stack's root registers the settings pages (`settingsDestinations()`), e.g. when the settings
+    /// are pushed from the iPhone's settings button: a destination registered on a pushed page isn't found there.
+    var registersDestinations: Bool = true
+
     var body: some View {
+        if registersDestinations {
+            content.settingsDestinations()
+        } else {
+            content
+        }
+    }
+
+    /// Built like the system settings: the account first, then the app's general settings, the settings of each area,
+    /// the app's log and information, and logging out at the end. Sections without headers, rows named like their pages.
+    private var content: some View {
         List {
             if isLoggedIn {
-                Section("Grocy") {
-                    NavigationLink(value: SettingsNavigationItem.serverInfo) {
-                        Label("Information about Grocy Server", systemImage: MySymbols.info)
-                            .foregroundStyle(.primary)
-                    }
-                    if let currentUser = grocyVM.currentUser {
-                        NavigationLink(value: SettingsNavigationItem.userInfo) {
-                            Label("Logged in as user \(currentUser.displayName)", systemImage: MySymbols.user)
-                                .foregroundStyle(.primary)
-                        }
-                    }
-                    Button(
-                        action: {
-                            grocyVM.deleteAllCachedData()
-                        },
-                        label: {
-                            Label("Reset cache", systemImage: MySymbols.delete)
-                                .foregroundStyle(.primary)
-                        }
-                    )
-                    // The destructive role colors the button, instead of a hard-coded red label.
-                    Button(
-                        role: .destructive,
-                        action: {
-                            grocyVM.logout()
-                        },
-                        label: {
-                            Label("Logout", systemImage: MySymbols.logout)
-                        }
-                    )
+                SettingsAccountSections()
+            }
+            Section {
+                settingsLink(.appSettings)
+            }
+            Section {
+                ForEach(SettingsNavigationItem.areas(in: systemConfig), id: \.self) { area in
+                    settingsLink(area)
                 }
             }
-
-            Section("Grocy settings") {
-                NavigationLink(value: SettingsNavigationItem.appSettings) {
-                    Label("App settings", systemImage: MySymbols.app)
-                        .foregroundStyle(.primary)
-                }
-                // Like Grocy's own settings, an area the server turned off has no settings page.
-                if systemConfig?.featureFlagStock != false {
-                    NavigationLink(value: SettingsNavigationItem.stockSettings) {
-                        Label("Stock settings", systemImage: MySymbols.stockOverview)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagShoppinglist != false {
-                    NavigationLink(value: SettingsNavigationItem.shoppingListSettings) {
-                        Label("Shopping list settings", systemImage: MySymbols.shoppingList)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagChores != false {
-                    NavigationLink(value: SettingsNavigationItem.choresSettings) {
-                        Label("Chores settings", systemImage: MySymbols.chores)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagTasks != false {
-                    NavigationLink(value: SettingsNavigationItem.tasksSettings) {
-                        Label("Tasks settings", systemImage: MySymbols.tasks)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagBatteries != false {
-                    NavigationLink(value: SettingsNavigationItem.batteriesSettings) {
-                        Label("Batteries settings", systemImage: MySymbols.batteries)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagRecipes != false {
-                    NavigationLink(value: SettingsNavigationItem.recipesSettings) {
-                        Label("Recipes settings", systemImage: MySymbols.recipe)
-                            .foregroundStyle(.primary)
-                    }
-                }
-                if systemConfig?.featureFlagRecipes != false && systemConfig?.featureFlagRecipesMealplan != false {
-                    NavigationLink(value: SettingsNavigationItem.mealPlanSettings) {
-                        Label("Meal plan settings", systemImage: MySymbols.mealPlan)
-                            .foregroundStyle(.primary)
-                    }
-                }
+            Section {
+                settingsLink(.appLog)
+                settingsLink(.aboutApp)
             }
-
-            Section("App") {
-                NavigationLink(value: SettingsNavigationItem.appLog) {
-                    Label("App log", systemImage: MySymbols.logFile)
-                        .foregroundStyle(.primary)
-                }
-                NavigationLink(value: SettingsNavigationItem.aboutApp) {
-                    Label("About this app", systemImage: MySymbols.info)
-                        .foregroundStyle(.primary)
-                }
+            if isLoggedIn {
+                SettingsLogoutSection()
             }
         }
-        .modifier(SettingsDestinations(isEnabled: registersDestinations))
         .navigationTitle("Settings")
         .task {
             await grocyVM.requestData(additionalObjects: [.system_info, .current_user])
         }
     }
+
+    private func settingsLink(_ item: SettingsNavigationItem) -> some View {
+        NavigationLink(value: item) {
+            Label(item.title, systemImage: item.icon)
+                .foregroundStyle(.primary)
+        }
+    }
 }
 
-/// The settings pages, one per `SettingsNavigationItem`.
+extension SettingsNavigationItem {
+    /// The areas with a settings page of their own, in the sidebar's order. Like Grocy's own settings,
+    /// an area the server turned off has none. Until the config is loaded, every area is shown.
+    static func areas(in systemConfig: SystemConfig?) -> [SettingsNavigationItem] {
+        var areas: [SettingsNavigationItem] = []
+        if systemConfig?.featureFlagStock != false { areas.append(.stockSettings) }
+        if systemConfig?.featureFlagShoppinglist != false { areas.append(.shoppingListSettings) }
+        if systemConfig?.featureFlagRecipes != false {
+            areas.append(.recipesSettings)
+            if systemConfig?.featureFlagRecipesMealplan != false { areas.append(.mealPlanSettings) }
+        }
+        if systemConfig?.featureFlagChores != false { areas.append(.choresSettings) }
+        if systemConfig?.featureFlagTasks != false { areas.append(.tasksSettings) }
+        if systemConfig?.featureFlagBatteries != false { areas.append(.batteriesSettings) }
+        return areas
+    }
+
+    /// The row's and the page's title. Within the settings, "settings" in each title would only repeat itself.
+    var title: LocalizedStringKey {
+        switch self {
+        case .serverInfo: "Information about Grocy Server"
+        case .userInfo: "User"
+        case .appSettings: "General"
+        case .stockSettings: "Stock"
+        case .shoppingListSettings: "Shopping list"
+        case .choresSettings: "Chores"
+        case .tasksSettings: "Tasks"
+        case .batteriesSettings: "Batteries"
+        case .recipesSettings: "Recipes"
+        case .mealPlanSettings: "Meal plan"
+        case .appLog: "App log"
+        case .aboutApp: "About this app"
+        case .phoneTabs: "Tabs"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .serverInfo, .aboutApp: MySymbols.info
+        case .userInfo: MySymbols.user
+        case .appSettings: MySymbols.settings
+        case .stockSettings: MySymbols.stockOverview
+        case .shoppingListSettings: MySymbols.shoppingList
+        case .choresSettings: MySymbols.chores
+        case .tasksSettings: MySymbols.tasks
+        case .batteriesSettings: MySymbols.batteries
+        case .recipesSettings: MySymbols.recipe
+        case .mealPlanSettings: MySymbols.mealPlan
+        case .appLog: MySymbols.logFile
+        case .phoneTabs: MySymbols.chooseTabs
+        }
+    }
+}
+
+/// A page of the settings.
 struct SettingsDestinationView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
 
@@ -186,21 +180,10 @@ struct SettingsDestinationView: View {
     }
 }
 
-private struct SettingsDestinations: ViewModifier {
-    let isEnabled: Bool
-
-    func body(content: Content) -> some View {
-        if isEnabled {
-            content.settingsNavigationDestinations()
-        } else {
-            content
-        }
-    }
-}
-
 extension View {
-    /// Registers the settings pages on a navigation stack.
-    func settingsNavigationDestinations() -> some View {
+    /// Registers the settings pages. On the stack's root view when the settings are pushed onto it
+    /// (`SettingsView(registersDestinations: false)`), otherwise on the settings themselves.
+    func settingsDestinations() -> some View {
         navigationDestination(for: SettingsNavigationItem.self) { destination in
             SettingsDestinationView(destination: destination)
         }

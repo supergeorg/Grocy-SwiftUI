@@ -8504,6 +8504,16 @@
     "A value is required" : {
 
     },
+    "About Grocy Mobile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Grocy Mobile"
+          }
+        }
+      }
+    },
     "About this app" : {
       "localizations" : {
         "cs" : {
@@ -8576,6 +8586,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "關於此應用程式"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
           }
         }
       }
@@ -42581,6 +42601,16 @@
         }
       }
     },
+    "General" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allgemein"
+          }
+        }
+      }
+    },
     "Georg Meißner" : {
 
     },
@@ -65903,6 +65933,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date de sortie"
+          }
+        }
+      }
+    },
+    "Reload" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu laden"
           }
         }
       }

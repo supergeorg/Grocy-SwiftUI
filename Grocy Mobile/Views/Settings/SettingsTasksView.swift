@@ -28,7 +28,7 @@ struct SettingsTasksView: View {
             )
         }
         .formStyle(.grouped)
-        .navigationTitle("Tasks settings")
+        .navigationTitle(SettingsNavigationItem.tasksSettings.title)
         .onDisappear {
             Task {
                 await grocyVM.requestData(additionalObjects: [.user_settings])
