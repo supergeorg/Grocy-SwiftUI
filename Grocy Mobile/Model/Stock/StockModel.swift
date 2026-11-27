@@ -115,6 +115,18 @@ class StockElement: Codable, Equatable {
         self.displayProduct = product
     }
 
+    /// Takes over the server's values for the same product, so the stored element stays the same object.
+    func update(from other: StockElement) {
+        if amount != other.amount { amount = other.amount }
+        if amountAggregated != other.amountAggregated { amountAggregated = other.amountAggregated }
+        if value != other.value { value = other.value }
+        if bestBeforeDate != other.bestBeforeDate { bestBeforeDate = other.bestBeforeDate }
+        if amountOpened != other.amountOpened { amountOpened = other.amountOpened }
+        if amountOpenedAggregated != other.amountOpenedAggregated { amountOpenedAggregated = other.amountOpenedAggregated }
+        if isAggregatedAmount != other.isAggregatedAmount { isAggregatedAmount = other.isAggregatedAmount }
+        if dueType != other.dueType { dueType = other.dueType }
+    }
+
     static func == (lhs: StockElement, rhs: StockElement) -> Bool {
         lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
             && lhs.amountOpened == rhs.amountOpened

@@ -83,29 +83,49 @@ struct SwiftDataSynchronizer {
         _ stockElements: [StockElement]
     ) throws {
         do {
-            let fetchDescriptor = FetchDescriptor<StockElement>()
-            let existing = try modelContext.fetch(fetchDescriptor)
+            let existing = try modelContext.fetch(FetchDescriptor<StockElement>())
 
-            // Delete removed items
-            let incomingIds = Set(stockElements.map { $0.id })
-            for item in existing where !incomingIds.contains(item.id) {
+            // Matched by product: the server has one stock element per product, and decoded elements get a new `id`
+            // each time. Updating the stored element in place keeps it alive, so a sheet or a row that still holds
+            // it doesn't read a deleted object (which crashes SwiftData: "backing data was detached from a context").
+            var existingByProductID: [Int: StockElement] = [:]
+            for item in existing {
+                if existingByProductID[item.productID] == nil {
+                    existingByProductID[item.productID] = item
+                } else {
+                    // A duplicate from an earlier version, which replaced all elements on every sync.
+                    modelContext.delete(item)
+                }
+            }
+
+            // Delete the products that left the stock
+            let incomingProductIDs = Set(stockElements.map(\.productID))
+            for (productID, item) in existingByProductID where !incomingProductIDs.contains(productID) {
                 modelContext.delete(item)
+                existingByProductID[productID] = nil
             }
 
             // Fetch all products for relationship resolution
-            let productDescriptor = FetchDescriptor<MDProduct>()
             let productsById = Dictionary(
-                uniqueKeysWithValues: try modelContext.fetch(productDescriptor).map { ($0.id, $0) }
+                try modelContext.fetch(FetchDescriptor<MDProduct>()).map { ($0.id, $0) },
+                uniquingKeysWith: { first, _ in first }
             )
 
-            // Insert/link new items
-            let existingIds = Set(existing.map { $0.id })
-            for element in stockElements where !existingIds.contains(element.id) {
-                // Link to existing product if available
-                if let product = productsById[element.productID] {
-                    element.product = product
+            for element in stockElements {
+                let product = productsById[element.productID]
+                if let stored = existingByProductID[element.productID] {
+                    stored.update(from: element)
+                    if stored.product?.persistentModelID != product?.persistentModelID {
+                        stored.product = product
+                    }
+                } else {
+                    // Link to existing product if available
+                    if let product {
+                        element.product = product
+                    }
+                    modelContext.insert(element)
+                    existingByProductID[element.productID] = element
                 }
-                modelContext.insert(element)
             }
 
             try modelContext.save()
