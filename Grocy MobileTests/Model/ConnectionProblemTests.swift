@@ -26,6 +26,12 @@ struct ConnectionProblemTests {
         #expect(ConnectionProblem(error: URLError(.serverCertificateUntrusted)) == .serverUnreachable)
     }
 
+    @Test("A proxy saying Grocy doesn't answer (502–504) is unreachable, not an error answer")
+    func gatewayError() {
+        #expect(ConnectionProblem(error: APIError.serverUnavailable(statusCode: 502)) == .serverUnreachable)
+        #expect(ConnectionProblem(error: APIError.serverUnavailable(statusCode: 504)) == .serverUnreachable)
+    }
+
     @Test("An error answer is a server error")
     func serverError() {
         #expect(ConnectionProblem(error: APIError.errorString(description: "Invalid API key")) == .serverError)

@@ -10,7 +10,7 @@ nonisolated enum ConnectionProblem: Equatable, Sendable {
     /// The device has no network connection.
     case offline
     /// The device is online, but the server doesn't answer: it's down, the address is wrong, the request timed out,
-    /// or the certificate isn't trusted.
+    /// the certificate isn't trusted, or a proxy in front of it says it doesn't answer (502–504).
     case serverUnreachable
     /// The server answers, but with an error, e.g. a proxy's error page, an invalid API key or an unexpected answer.
     case serverError
@@ -18,6 +18,10 @@ nonisolated enum ConnectionProblem: Equatable, Sendable {
     /// The problem an error means, or nil for a cancelled request, which isn't a problem.
     init?(error: Error) {
         if isCancellation(error) { return nil }
+        if case APIError.serverUnavailable = error {
+            self = .serverUnreachable
+            return
+        }
         guard let urlError = error as? URLError else {
             self = .serverError
             return

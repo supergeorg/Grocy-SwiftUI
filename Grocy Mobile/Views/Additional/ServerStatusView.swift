@@ -26,7 +26,8 @@ extension ConnectionProblem {
 /// Says that the server can't be used right now and how old the shown data is. Tapping it tries again.
 ///
 /// Small and out of the way, but shown on every screen for as long as the problem lasts: in the tab bar's accessory
-/// (`serverStatusAccessory()`) or below the content (`serverStatusBar()`).
+/// (`serverStatusAccessory()`) or at the bottom of the sidebar (`serverStatusBar()`).
+/// The app also tries again by itself every 30 seconds, when the network comes back and when it becomes active.
 struct ServerStatusView: View {
     @Environment(GrocyViewModel.self) private var grocyVM
     @State private var isRetrying = false
@@ -36,7 +37,7 @@ struct ServerStatusView: View {
             Button {
                 Task {
                     isRetrying = true
-                    await grocyVM.retryFailedRequests()
+                    await grocyVM.checkServerConnection()
                     isRetrying = false
                 }
             } label: {
@@ -88,7 +89,7 @@ extension View {
     #endif
 
     /// Shows the server status in a glass capsule below the content while there's a connection problem,
-    /// for the screens without a tab bar (the sidebar navigation on iPad, iPhone and Mac).
+    /// for the sidebar navigation (iPad, iPhone and Mac), which has no tab bar.
     func serverStatusBar(isShown: Bool) -> some View {
         safeAreaInset(edge: .bottom) {
             if isShown {

@@ -79,6 +79,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
    - `AdditionalEntities` are the special endpoints: stock, volatile stock, system info and config, users, user settings, recipe fulfillments, chores.
 4. **Writes go through the view model.** Use `postMDObject`, `putMDObjectWithID`, `deleteMDObject`, `postStockObject`, `shoppingListAction`, `executeChore`, and similar methods, then call `requestData` to resync. New object IDs come from `grocyVM.findNextID(_:)`.
 5. **Errors:** failed loads are tracked in `grocyVM.failedToLoadObjects` and `failedToLoadAdditionalObjects`. Views show `ServerProblemView()` when one of their `dataToUpdate` entities failed.
+6. **Server reachability:** `grocyVM.connectionProblem` (`ConnectionProblem`, `Model/System/`) says why the server can't be used: offline, not reachable (also a proxy's 502–504) or an error answer. `requestData` reports each `db-changed-time` result (no checks in advance), and an `NWPathMonitor` reports the device's network. While there's a problem, `checkServerConnection()` runs every 30 seconds, when the network comes back and when the app becomes active, and then reloads what failed and what the views asked for meanwhile. `ServerStatusView` shows it unobtrusively, never as an alert: in the tab view's bottom accessory (`serverStatusAccessory`) or at the bottom of the sidebar (`serverStatusBar`, on iPhone with the sidebar navigation also on the pushed screens). Tapping it tries again.
 
 ### Persistence
 

@@ -6,6 +6,7 @@ A big update for Grocy 4.7.1.
 - Clearer permission prompts for the local network, camera and Reminders, now also in German
 - Siri phrases also work in German
 - User management for everyone, like in Grocy's web app: create, edit and delete users with their picture and userfields, and configure permissions as an admin. Edit your own name, password and picture in the settings.
+- When the server can't be reached, a small status above the tab bar or at the bottom of the sidebar says so, together with when the data was last updated. The app keeps showing the saved data and connects again by itself.
 - TODO: more highlights
 
 Ein großes Update für Grocy 4.7.1.
@@ -14,4 +15,5 @@ Ein großes Update für Grocy 4.7.1.
 - Verständlichere Berechtigungsabfragen für das lokale Netzwerk, die Kamera und Erinnerungen, jetzt auch auf Deutsch
 - Siri-Befehle funktionieren auch auf Deutsch
 - Benutzerverwaltung für alle, wie in der Weboberfläche von Grocy: Benutzer mit Bild und Benutzerfeldern anlegen, bearbeiten und löschen, und als Admin Berechtigungen konfigurieren. Den eigenen Namen, das Passwort und das Bild in den Einstellungen ändern.
+- Ist der Server nicht erreichbar, zeigt ein kleiner Hinweis über der Tableiste oder unten in der Seitenleiste das an, zusammen mit dem Zeitpunkt der letzten Aktualisierung. Die App zeigt weiter die gespeicherten Daten und verbindet sich von selbst wieder.
 - TODO: weitere Highlights
