@@ -346,6 +346,7 @@ struct Grocy_MobileApp: App {
             switch phase {
             case .active:
                 ReminderStore.shared.startPeriodicSync()
+                Task { await grocyVM.checkServerConnectionIfNeeded() }
             case .background:
                 ReminderStore.shared.stopPeriodicSync()
                 #if os(iOS)

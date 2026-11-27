@@ -46909,6 +46909,16 @@
         }
       }
     },
+    "Last updated %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt aktualisiert %@"
+          }
+        }
+      }
+    },
     "Last used" : {
       "localizations" : {
         "ca" : {
@@ -53348,6 +53358,16 @@
     },
     "No instruction manual" : {
 
+    },
+    "No internet connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Internetverbindung"
+          }
+        }
+      }
     },
     "No items to add to stock" : {
       "localizations" : {
@@ -68090,6 +68110,26 @@
     "Server default (%@)" : {
 
     },
+    "Server not reachable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server nicht erreichbar"
+          }
+        }
+      }
+    },
+    "Server problem" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem mit dem Server"
+          }
+        }
+      }
+    },
     "Server timeout interval" : {
       "localizations" : {
         "cs" : {
@@ -71169,6 +71209,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benutzer anzeigen"
+          }
+        }
+      }
+    },
+    "Showing the data saved on this device" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt die auf diesem Gerät gespeicherten Daten"
           }
         }
       }
@@ -87817,6 +87867,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一開封即從庫存中扣除"
+          }
+        }
+      }
+    },
+    "Tries to reach the server again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versucht erneut, den Server zu erreichen."
           }
         }
       }

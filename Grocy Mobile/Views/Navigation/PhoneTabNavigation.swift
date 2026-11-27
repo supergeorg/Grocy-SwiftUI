@@ -97,6 +97,8 @@ import SwiftUI
             // become a sidebar, with the same places, so the hierarchy doesn't change when the device opens.
             .tabViewStyle(.sidebarAdaptable)
             .tabBarMinimizeBehavior(.onScrollDown)
+            // Only while the server has a problem; inline with the tab bar once it's minimized.
+            .serverConnectionAccessory(grocyVM.serverConnection)
             // Selecting the search tab puts the cursor straight into the field.
             .tabViewSearchActivation(.searchTabSelection)
             .quickScanSheet(isPresented: $showQuickScan, zoomSource: (QuickScanSearchButton.transitionID, quickScanTransition))

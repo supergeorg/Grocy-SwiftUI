@@ -74,6 +74,7 @@ nonisolated struct MySymbols {
     static let logFile = "doc.plaintext"
     static let info = "info.circle"
     static let offline = "wifi.slash"
+    static let serverUnreachable = "network.slash"
     static let api = "chevron.left.forwardslash.chevron.right"
     static let website = "network"
     static let unknown = "questionmark"

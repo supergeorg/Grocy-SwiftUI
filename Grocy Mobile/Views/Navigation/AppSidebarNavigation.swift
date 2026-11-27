@@ -9,6 +9,9 @@ import SwiftUI
 
 struct AppSidebarNavigation: View {
     @Environment(DeepLinkManager.self) var deepLinkManager
+    #if os(iOS)
+        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
 
     @State private var selection: NavigationItem? = .none
 
@@ -16,11 +19,23 @@ struct AppSidebarNavigation: View {
         NavigationSplitView(
             sidebar: {
                 Sidebar(selection: $selection)
+                    // The server status, like Mail's offline status, at the bottom of the sidebar.
+                    .safeAreaInset(edge: .bottom) {
+                        ServerConnectionStatusView(style: .sidebar)
+                    }
             },
             detail: {
                 NavigationStack {
                     Navigation(selection: $selection)
                 }
+                #if os(iOS)
+                    // Collapsed (iPhone), the sidebar isn't visible on the pushed screens, so they show the status too.
+                    .safeAreaInset(edge: .bottom) {
+                        if horizontalSizeClass == .compact {
+                            ServerConnectionStatusView(style: .floating)
+                        }
+                    }
+                #endif
             }
         )
         .onAppear {

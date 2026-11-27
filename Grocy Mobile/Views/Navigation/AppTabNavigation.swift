@@ -307,6 +307,7 @@ struct AppTabNavigation: View {
             #endif
         }
         .tabViewStyle(.sidebarAdaptable)
+        .serverConnectionAccessory(grocyVM.serverConnection)
         .tabViewCustomization($appTabCustomization)
         .tabViewSidebarHeader(content: {
             Image("grocy-logo")

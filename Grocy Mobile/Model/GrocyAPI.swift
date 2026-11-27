@@ -390,6 +390,7 @@ public class GrocyApi: GrocyAPI {
         let result = try await session.data(for: urlRequest)
         if let httpResponse = result.1 as? HTTPURLResponse {
             if !((200...299).contains(httpResponse.statusCode)) {
+                try Self.throwIfGatewayError(httpResponse)
                 do {
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
@@ -446,6 +447,7 @@ public class GrocyApi: GrocyAPI {
                     throw APIError.decodingError(error: error)
                 }
             } else {
+                try Self.throwIfGatewayError(httpResponse)
                 do {
                     let responseErrorDecoded = try JSONDecoder().decode(ErrorMessage.self, from: result.0)
                     throw APIError.errorString(description: responseErrorDecoded.errorMessage)
@@ -455,6 +457,14 @@ public class GrocyApi: GrocyAPI {
             }
         }
         throw APIError.internalError
+    }
+
+    /// A proxy in front of Grocy (Home Assistant, a reverse proxy) answers 502–504 with an HTML page when Grocy doesn't answer.
+    /// That's a server that can't be reached, not an answer that can't be read.
+    private static func throwIfGatewayError(_ response: HTTPURLResponse) throws {
+        if (502...504).contains(response.statusCode) {
+            throw APIError.serverError(errorMessage: "HTTP \(response.statusCode)")
+        }
     }
 
     private func request(
