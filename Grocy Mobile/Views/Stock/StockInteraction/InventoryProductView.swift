@@ -292,7 +292,7 @@ struct InventoryProductView: View {
                 )
             }
             if productToInventoryID == nil {
-                ToolbarItem(id: "clear", placement: .cancellationAction) {
+                ToolbarItem(id: "clear", placement: .clearFormAction) {
                     Button(
                         action: resetForm,
                         label: {
@@ -305,6 +305,12 @@ struct InventoryProductView: View {
                     .disabled(isProcessingAction)
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToInventoryID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             ToolbarItem(id: "inventory", placement: .primaryAction) {
                 Button(
                     role: .confirm,

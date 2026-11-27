@@ -296,7 +296,7 @@ struct TransferProductView: View {
                 )
             }
             if productToTransferID == nil {
-                ToolbarItem(id: "reset", placement: .cancellationAction) {
+                ToolbarItem(id: "reset", placement: .clearFormAction) {
                     Button(
                         action: {
                             actionPending = false
@@ -312,6 +312,12 @@ struct TransferProductView: View {
                     .disabled(isProcessingAction)
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToTransferID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             ToolbarItem(id: "transfer", placement: .primaryAction) {
                 Button(
                     role: .confirm,

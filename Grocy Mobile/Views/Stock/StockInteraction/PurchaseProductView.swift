@@ -462,7 +462,7 @@ struct PurchaseProductView: View {
                 )
             }
             if productToPurchaseID == nil {
-                ToolbarItem(id: "clear", placement: .cancellationAction) {
+                ToolbarItem(id: "clear", placement: .clearFormAction) {
                     if !quickScan {
                         Button(
                             action: {
@@ -480,6 +480,12 @@ struct PurchaseProductView: View {
                     }
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToPurchaseID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Button(
                     role: .confirm,

@@ -484,7 +484,7 @@ struct ConsumeProductView: View {
                 )
             }
             if productToConsumeID == nil {
-                ToolbarItem(id: "clear", placement: .cancellationAction) {
+                ToolbarItem(id: "clear", placement: .clearFormAction) {
                     if !quickScan {
                         Button(
                             action: {
@@ -502,6 +502,12 @@ struct ConsumeProductView: View {
                     }
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToConsumeID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             if features.openedTracking && ((consumeType == .open) || (consumeType == .both)) {
                 ToolbarItem(id: "open", placement: .primaryAction) {
                     Button(
