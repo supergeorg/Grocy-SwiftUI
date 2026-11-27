@@ -30,6 +30,49 @@ enum StockInteraction: Hashable, Identifiable {
     case editProduct(stockElement: StockElement)
 
     var id: Self { self }
+
+    /// The product's stock element, for the interactions of one product.
+    private var stockElement: StockElement? {
+        switch self {
+        case .purchaseProduct, .consumeProduct, .transferProduct, .inventoryProduct, .stockJournal: nil
+        case .addToShL(let element), .productPurchase(let element), .productConsume(let element), .productTransfer(let element),
+            .productInventory(let element), .productOverview(let element), .productJournal(let element), .productEntries(let element),
+            .productRecipes(let element), .editProduct(let element):
+            element
+        }
+    }
+
+    /// The case without its element, to compare the kind of interaction.
+    private var kind: Int {
+        switch self {
+        case .purchaseProduct: 0
+        case .consumeProduct: 1
+        case .transferProduct: 2
+        case .inventoryProduct: 3
+        case .stockJournal: 4
+        case .addToShL: 5
+        case .productPurchase: 6
+        case .productConsume: 7
+        case .productTransfer: 8
+        case .productInventory: 9
+        case .productOverview: 10
+        case .productJournal: 11
+        case .productEntries: 12
+        case .productRecipes: 13
+        case .editProduct: 14
+        }
+    }
+
+    // Compared by the element's identity, not its values: while a sheet is open, a stock sync can delete the element
+    // (the product left the stock), and reading a deleted model's attributes crashes SwiftData.
+    static func == (lhs: StockInteraction, rhs: StockInteraction) -> Bool {
+        lhs.kind == rhs.kind && lhs.stockElement.map(ObjectIdentifier.init) == rhs.stockElement.map(ObjectIdentifier.init)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(kind)
+        hasher.combine(stockElement.map(ObjectIdentifier.init))
+    }
 }
 
 enum StockGrouping: String, Codable, Sendable {
