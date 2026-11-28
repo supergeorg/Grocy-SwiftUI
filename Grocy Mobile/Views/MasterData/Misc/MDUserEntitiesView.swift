@@ -88,22 +88,19 @@ struct MDUserEntitiesView: View {
                 #endif
             }
             .navigationTitle("Userentities")
-            #if os(iOS)
-                .sheet(
-                    isPresented: self.$showAddUserEntity,
-                    content: {
-                        NavigationStack {
-                            MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
-                        }
-                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            .sheet(
+                isPresented: self.$showAddUserEntity,
+                content: {
+                    NavigationStack {
+                        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
                     }
-                )
-            #else
-                .navigationDestination(
-                    isPresented: $showAddUserEntity,
-                    destination: { MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity) }
-                )
-            #endif
+                    #if os(iOS)
+                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                    #else
+                        .presentationSizing(.form)
+                    #endif
+                }
+            )
     }
 
     var content: some View {

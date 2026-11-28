@@ -110,19 +110,19 @@ struct MealPlanSectionsView: View {
                 .padding(Spacing.medium)
             }
         #endif
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddSection,
-                content: {
-                    NavigationStack {
-                        MealPlanSectionFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddSection,
+            content: {
+                NavigationStack {
+                    MealPlanSectionFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddSection, destination: { MealPlanSectionFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationTitle("Meal plan sections")
         .navigationDestination(
             for: MDMealPlanSection.self,

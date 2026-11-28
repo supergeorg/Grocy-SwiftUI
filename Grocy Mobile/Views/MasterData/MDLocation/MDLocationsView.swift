@@ -112,19 +112,19 @@ struct MDLocationsView: View {
                 ContentUnavailableView.search
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddLocation,
-                content: {
-                    NavigationStack {
-                        MDLocationFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddLocation,
+            content: {
+                NavigationStack {
+                    MDLocationFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddLocation, destination: { MDLocationFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDLocation.self,
             destination: { location in

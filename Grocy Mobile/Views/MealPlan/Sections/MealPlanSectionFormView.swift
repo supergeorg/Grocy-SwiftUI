@@ -155,7 +155,7 @@ struct MealPlanSectionFormView: View {
         }
         .navigationTitle(existingMealPlanSection == nil ? "Create meal plan section" : "Edit meal plan section")
         .toolbar(content: {
-            if existingMealPlanSection == nil, !FormPresentation.createFormIsPushed {
+            if existingMealPlanSection == nil {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel, action: { finishForm() })
                         .keyboardShortcut(.cancelAction)

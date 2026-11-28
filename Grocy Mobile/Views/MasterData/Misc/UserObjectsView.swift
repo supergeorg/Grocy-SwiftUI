@@ -132,18 +132,16 @@ struct UserObjectsView: View {
         }
         .searchable(text: $searchString, prompt: "Search")
         .animation(.default, value: filteredUserObjects.count)
-        #if os(iOS)
-            .sheet(isPresented: $showAddUserObject, onDismiss: { Task { await updateData() } }) {
-                NavigationStack {
-                    UserObjectFormView(userEntity: userEntity)
-                }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
-            }
-        #else
-            .navigationDestination(isPresented: $showAddUserObject) {
+        .sheet(isPresented: $showAddUserObject, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
                 UserObjectFormView(userEntity: userEntity)
             }
-        #endif
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .alert("Do you really want to delete this record?", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {

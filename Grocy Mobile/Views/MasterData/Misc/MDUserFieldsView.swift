@@ -91,22 +91,19 @@ struct MDUserFieldsView: View {
                 #endif
             }
             .navigationTitle("Userfields")
-            #if os(iOS)
-                .sheet(
-                    isPresented: self.$showAddUserField,
-                    content: {
-                        NavigationStack {
-                            MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
-                        }
-                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            .sheet(
+                isPresented: self.$showAddUserField,
+                content: {
+                    NavigationStack {
+                        MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
                     }
-                )
-            #else
-                .navigationDestination(
-                    isPresented: $showAddUserField,
-                    destination: { MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField) }
-                )
-            #endif
+                    #if os(iOS)
+                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                    #else
+                        .presentationSizing(.form)
+                    #endif
+                }
+            )
     }
 
     var content: some View {

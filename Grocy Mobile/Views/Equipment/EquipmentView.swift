@@ -103,16 +103,16 @@ struct EquipmentView: View {
                 ContentUnavailableView.search
             }
         }
-        #if os(iOS)
-            .sheet(isPresented: $showAddEquipment) {
-                NavigationStack {
-                    EquipmentFormView(isPopup: true)
-                }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(isPresented: $showAddEquipment) {
+            NavigationStack {
+                EquipmentFormView(isPopup: true)
             }
-        #else
-            .navigationDestination(isPresented: $showAddEquipment) { EquipmentFormView() }
-        #endif
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .navigationDestination(for: MDEquipment.self) { item in
             EquipmentDetailsView(equipment: item)
         }

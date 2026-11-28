@@ -110,19 +110,19 @@ struct MDChoresView: View {
                 ContentUnavailableView.search
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddChore,
-                content: {
-                    NavigationStack {
-                        MDChoreFormView(isPopup: true)
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddChore,
+            content: {
+                NavigationStack {
+                    MDChoreFormView(isPopup: true)
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddChore, destination: { MDChoreFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDChore.self,
             destination: { chore in

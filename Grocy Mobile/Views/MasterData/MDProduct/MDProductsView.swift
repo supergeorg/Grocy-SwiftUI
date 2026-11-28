@@ -226,19 +226,19 @@ struct MDProductsView: View {
             #endif
         })
         .navigationTitle("Products")
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddProduct,
-                content: {
-                    NavigationStack {
-                        MDProductFormView(userSettings: userSettings)
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddProduct,
+            content: {
+                NavigationStack {
+                    MDProductFormView(userSettings: userSettings)
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddProduct, destination: { MDProductFormView(userSettings: userSettings) })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(item: $copiedProduct) { product in
             MDProductFormView(existingProduct: product, userSettings: userSettings)
         }

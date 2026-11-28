@@ -112,19 +112,19 @@ struct MDStoresView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddStore,
-                content: {
-                    NavigationStack {
-                        MDStoreFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddStore,
+            content: {
+                NavigationStack {
+                    MDStoreFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddStore, destination: { MDStoreFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDStore.self,
             destination: { store in

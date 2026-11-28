@@ -150,21 +150,15 @@ struct MDBarcodesView: View {
             },
             message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") }
         )
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddBarcode,
-                content: {
-                    NavigationStack {
-                        MDBarcodeFormView(product: product)
-                    }
+        .sheet(
+            isPresented: $showAddBarcode,
+            content: {
+                NavigationStack {
+                    MDBarcodeFormView(product: product)
                 }
-            )
-        #else
-            .navigationDestination(
-                isPresented: $showAddBarcode,
-                destination: { MDBarcodeFormView(product: product) }
-            )
-        #endif
+                .presentationSizing(.form)
+            }
+        )
         .navigationDestination(
             for: MDProductBarcode.self,
             destination: { productBarcode in

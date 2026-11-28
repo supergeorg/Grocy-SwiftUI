@@ -113,19 +113,19 @@ struct MDTaskCategoriesView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddTaskCategory,
-                content: {
-                    NavigationStack {
-                        MDTaskCategoryFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddTaskCategory,
+            content: {
+                NavigationStack {
+                    MDTaskCategoryFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddTaskCategory, destination: { MDTaskCategoryFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationTitle("Task categories")
         .navigationDestination(
             for: MDTaskCategory.self,

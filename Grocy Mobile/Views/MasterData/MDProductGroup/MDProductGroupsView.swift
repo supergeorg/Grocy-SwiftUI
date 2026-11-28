@@ -116,19 +116,19 @@ struct MDProductGroupsView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddProductGroup,
-                content: {
-                    NavigationStack {
-                        MDProductGroupFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddProductGroup,
+            content: {
+                NavigationStack {
+                    MDProductGroupFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddProductGroup, destination: { MDProductGroupFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDProductGroup.self,
             destination: { productGroup in

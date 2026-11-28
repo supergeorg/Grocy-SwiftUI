@@ -103,7 +103,7 @@ Grocy REST API ──► GrocyApi (URLSession, async/await)
     - Deep links select a tab, or push the place onto the due tab (chores, tasks) or the first tab when it isn't a tab.
   - **iPad in regular width:** `AppTabNavigation` or `AppSidebarNavigation`.
 - List → detail navigation uses `NavigationLink(value:)` plus `.navigationDestination(for:)`.
-- Creating an item uses a `.sheet` on iOS and `.navigationDestination(isPresented:)` on macOS, behind `#if os(iOS)`.
+- Creating an item is a self-contained task, so it uses a `.sheet` on every platform, with a `NavigationStack` inside and a Cancel button in the form. On iOS the sheet zooms from the create button (`navigationTransition(.zoom…)`); on macOS it has `.presentationSizing(.form)`. Editing an existing item is pushed (`NavigationLink(value:)`).
 - Deep links (opened by the widgets) are `grocy://stock/filter/<ProductStatus>`, `grocy://shoppinglist[/list/<id>]`, `grocy://chores/filter/<ChoreStatus>` and `grocy://tasks/filter/<TaskStatus>`. Widgets build them with `WidgetDeepLink` (`SharedModel.swift`); the app parses them with `GrocyDeepLink` (`Helper/DeepLinkHandler.swift`) and hands them over through the `DeepLinkManager` environment object.
 
 ### Other subsystems

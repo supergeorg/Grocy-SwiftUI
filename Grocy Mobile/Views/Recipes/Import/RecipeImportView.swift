@@ -357,12 +357,9 @@ struct RecipeImportView: View {
             fillMissingMatches()
         }
         .toolbar {
-            // On iOS a sheet; on the Mac pushed onto the recipes, with a back button.
-            if !FormPresentation.createFormIsPushed {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .cancel, action: finishForm)
-                        .keyboardShortcut(.cancelAction)
-                }
+            ToolbarItem(placement: .cancellationAction) {
+                Button(role: .cancel, action: finishForm)
+                    .keyboardShortcut(.cancelAction)
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button(

@@ -230,19 +230,16 @@ struct RecipesView: View {
                 }
                 #if os(iOS)
                     .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
                 #endif
             }
-            #if os(iOS)
-                .sheet(isPresented: $showImportRecipe) {
-                    NavigationStack {
-                        RecipeImportView()
-                    }
-                }
-            #else
-                .navigationDestination(isPresented: $showImportRecipe) {
+            .sheet(isPresented: $showImportRecipe) {
+                NavigationStack {
                     RecipeImportView()
                 }
-            #endif
+                .presentationSizing(.form)
+            }
             .task {
                 await updateData()
                 initialLoadDone = true

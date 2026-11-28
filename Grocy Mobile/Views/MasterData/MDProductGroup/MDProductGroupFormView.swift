@@ -108,7 +108,7 @@ struct MDProductGroupFormView: View {
         .formStyle(.grouped)
         .navigationTitle(existingProductGroup == nil ? "Create product group" : "Edit product group")
         .toolbar(content: {
-            if existingProductGroup == nil, !FormPresentation.createFormIsPushed {
+            if existingProductGroup == nil {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

@@ -112,7 +112,7 @@ struct MDTaskCategoryFormView: View {
         }
         .navigationTitle(existingTaskCategory == nil ? "Create task category" : "Edit task category")
         .toolbar(content: {
-            if existingTaskCategory == nil, !FormPresentation.createFormIsPushed {
+            if existingTaskCategory == nil {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

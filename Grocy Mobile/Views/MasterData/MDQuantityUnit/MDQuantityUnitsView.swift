@@ -109,19 +109,19 @@ struct MDQuantityUnitsView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddQuantityUnit,
-                content: {
-                    NavigationStack {
-                        MDQuantityUnitFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddQuantityUnit,
+            content: {
+                NavigationStack {
+                    MDQuantityUnitFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddQuantityUnit, destination: { MDQuantityUnitFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDQuantityUnit.self,
             destination: { quantityUnit in

@@ -158,7 +158,7 @@ struct MDBarcodeFormView: View {
         }
         .navigationTitle(existingBarcode == nil ? "Add barcode" : "Edit barcode")
         .toolbar(content: {
-            if existingBarcode == nil, !FormPresentation.createFormIsPushed {
+            if existingBarcode == nil {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

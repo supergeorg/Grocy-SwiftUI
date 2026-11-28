@@ -97,16 +97,16 @@ struct MDBatteriesView: View {
                 ContentUnavailableView.search
             }
         }
-        #if os(iOS)
-            .sheet(isPresented: $showAddBattery) {
-                NavigationStack {
-                    MDBatteryFormView(isPopup: true)
-                }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(isPresented: $showAddBattery) {
+            NavigationStack {
+                MDBatteryFormView(isPopup: true)
             }
-        #else
-            .navigationDestination(isPresented: $showAddBattery) { MDBatteryFormView() }
-        #endif
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .navigationDestination(for: MDBattery.self) { battery in
             MDBatteryFormView(existingBattery: battery)
         }

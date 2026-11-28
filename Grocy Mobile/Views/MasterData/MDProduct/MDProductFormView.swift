@@ -48,8 +48,6 @@ struct MDProductFormView: View {
 
     @Binding var createdProductID: Int?
     var createBarcode: Bool
-    /// Shown in a sheet, which needs a Cancel button also where the lists push the form.
-    var isPopup: Bool
 
     var existingProduct: MDProduct?
     @State private var product: MDProduct
@@ -81,11 +79,9 @@ struct MDProductFormView: View {
         queuedBarcode: String? = nil,
         createBarcode: Bool = false,
         createdProductID: Binding<Int?> = .constant(nil),
-        suggester: ProductPropertySuggester? = nil,
-        isPopup: Bool = false
+        suggester: ProductPropertySuggester? = nil
     ) {
         _createdProductID = createdProductID
-        self.isPopup = isPopup
         self.suggester = suggester
         self.existingProduct = existingProduct
         self._queuedBarcode = State(initialValue: queuedBarcode ?? "")
@@ -522,7 +518,7 @@ struct MDProductFormView: View {
 
         .navigationTitle(existingProduct == nil ? "Create product" : "Edit product")
         .toolbar(content: {
-            if existingProduct == nil, isPopup || !FormPresentation.createFormIsPushed {
+            if existingProduct == nil {
                 ToolbarItem(
                     placement: .cancellationAction,
                     content: {

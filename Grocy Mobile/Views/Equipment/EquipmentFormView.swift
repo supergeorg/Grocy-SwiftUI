@@ -233,7 +233,7 @@ struct EquipmentFormView: View {
         }
         .navigationTitle(existingEquipment == nil ? "Create equipment" : "Edit equipment")
         .toolbar {
-            if (existingEquipment == nil && !FormPresentation.createFormIsPushed) || isPopup {
+            if existingEquipment == nil || isPopup {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel) {
                         finishForm()
