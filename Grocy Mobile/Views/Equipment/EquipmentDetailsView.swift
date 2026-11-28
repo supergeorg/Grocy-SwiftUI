@@ -80,6 +80,7 @@ struct EquipmentDetailsView: View {
                 ToolbarItem(placement: .automatic) {
                     ShareLink(item: manualFileURL) {
                         Label("Share", systemImage: MySymbols.share)
+                            .macHelp("Share")
                     }
                 }
             }
@@ -88,6 +89,7 @@ struct EquipmentDetailsView: View {
                     showEditForm = true
                 } label: {
                     Label("Edit equipment", systemImage: MySymbols.edit)
+                        .macHelp("Edit equipment")
                 }
             }
         }

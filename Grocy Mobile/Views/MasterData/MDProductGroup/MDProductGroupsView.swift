@@ -78,18 +78,6 @@ struct MDProductGroupsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProductGroupsCount == 0 {
-                ContentUnavailableView {
-                    Label("No product groups", systemImage: MySymbols.productGroup)
-                } description: {
-                    Text("No product group defined. Please create one.")
-                } actions: {
-                    Button("Create product group") {
-                        showAddProductGroup = true
-                    }
-                }
-            } else if mdProductGroups.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdProductGroups, id: \.id) { productGroup in
                 NavigationLink(
@@ -111,19 +99,36 @@ struct MDProductGroupsView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddProductGroup,
-                content: {
-                    NavigationStack {
-                        MDProductGroupFormView()
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdProductGroupsCount == 0 {
+                    ContentUnavailableView {
+                        Label("No product groups", systemImage: MySymbols.productGroup)
+                    } description: {
+                        Text("No product group defined. Please create one.")
+                    } actions: {
+                        Button("Create product group") {
+                            showAddProductGroup = true
+                        }
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                } else if mdProductGroups.isEmpty {
+                    ContentUnavailableView.search
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddProductGroup, destination: { MDProductGroupFormView() })
-        #endif
+            }
+        }
+        .sheet(
+            isPresented: $showAddProductGroup,
+            content: {
+                NavigationStack {
+                    MDProductGroupFormView()
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDProductGroup.self,
             destination: { productGroup in
@@ -153,6 +158,7 @@ struct MDProductGroupsView: View {
                     },
                     label: {
                         Label("Create product group", systemImage: MySymbols.new)
+                            .macHelp("Create product group")
                     }
                 )
             }

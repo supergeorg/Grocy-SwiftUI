@@ -254,21 +254,8 @@ struct TasksView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if tasksCount == 0 {
-                ContentUnavailableView {
-                    Label("No tasks", systemImage: MySymbols.tasks)
-                } description: {
-                    Text("No task defined. Please create one.")
-                } actions: {
-                    Button("Create task") {
-                        showCreateTask = true
-                    }
-                }
-            } else if grocyTasks.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(filteredTasks.sorted(by: sortComparator), id: \.id) { grocyTask in
                 NavigationLink(value: grocyTask) {
@@ -343,7 +330,8 @@ struct TasksView: View {
                             }
                         )
                         .tint(.green)
-                        .accessibilityHint("Mark task as completed")
+                        // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                        .accessibilityLabel("Mark task as completed")
                     } else {
                         Button(
                             action: {
@@ -357,6 +345,23 @@ struct TasksView: View {
                         )
                         .tint(.gray)
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if tasksCount == 0 {
+                    ContentUnavailableView {
+                        Label("No tasks", systemImage: MySymbols.tasks)
+                    } description: {
+                        Text("No task defined. Please create one.")
+                    } actions: {
+                        Button("Create task") {
+                            showCreateTask = true
+                        }
+                    }
+                } else if grocyTasks.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }
@@ -439,6 +444,7 @@ struct TasksView: View {
                         },
                         label: {
                             Label("Create task", systemImage: MySymbols.new)
+                                .macHelp("Create task")
                         }
                     )
                 }
@@ -451,6 +457,7 @@ struct TasksView: View {
                     action: { showingFilterSheet = true },
                     label: {
                         Label("Filter", systemImage: MySymbols.filter)
+                            .macHelp("Filter")
                     }
                 )
                 .badge(numFilters)
@@ -459,6 +466,7 @@ struct TasksView: View {
                     action: { showDoneTasks.toggle() },
                     label: {
                         Label("Show done tasks", systemImage: MySymbols.show)
+                            .macHelp("Show done tasks")
                             .symbolVariant(showDoneTasks ? .fill : .none)
                     }
                 )
@@ -499,6 +507,8 @@ struct TasksView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
     }
 
@@ -550,6 +560,7 @@ struct TasksView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

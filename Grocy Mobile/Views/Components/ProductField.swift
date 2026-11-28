@@ -124,6 +124,8 @@ struct ProductField: View {
                                 Image(systemName: MySymbols.barcodeScan)
                             }
                         )
+                        .accessibilityLabel(Text("Scan barcode"))
+                        .macHelp("Scan barcode")
                         .sheet(isPresented: $isShowingScanner) {
                             CodeScannerSheetView { result in
                                 handleScan(result.value)

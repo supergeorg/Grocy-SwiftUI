@@ -221,6 +221,11 @@ nonisolated struct MySymbols {
     static let previousStep = "chevron.backward"
     static let nextStep = "chevron.forward"
     static let cookingFinished = "fork.knife.circle"
+    static let timer = "timer"
+    static let timerPause = "pause.fill"
+    static let timerResume = "play.fill"
+    static let timerDone = "bell.and.waves.left.and.right.fill"
+    static let timerRemove = "xmark"
 
     // MARK: - Meal plan
 

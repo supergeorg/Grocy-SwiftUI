@@ -10,19 +10,15 @@ import Foundation
 struct Constants {
     #if os(macOS)
         static let macOSNavWidth: CGFloat = 300.0
-        /// A settings pane: wide enough for a grouped form with a picker, and for the panes in the window's toolbar.
-        static let macOSSettingsWidth: CGFloat = 650.0
-        static let macOSSettingsHeight: CGFloat = 520.0
-        /// The app log's and the about window's first size.
-        static let macOSAuxiliaryWindowWidth: CGFloat = 620.0
-        static let macOSAuxiliaryWindowHeight: CGFloat = 560.0
         static let macOSMinWindowWidth: CGFloat = 500.0
         static let macOSStockEntriesMinWidth: CGFloat = 350.0
         /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.
         static let macOSAmountFieldWidth: CGFloat = 90.0
-        /// The cooking mode's sheet, large enough to read a step from a distance.
+        /// The cooking mode's window, large enough to read a step from a distance.
         static let macOSCookingMinWidth: CGFloat = 640.0
         static let macOSCookingMinHeight: CGFloat = 560.0
+        static let macOSCookingWidth: CGFloat = 820.0
+        static let macOSCookingHeight: CGFloat = 680.0
         /// Onboarding, login start and What's New, so the feature list and its buttons fit without scrolling.
         static let macOSIntroductionMinHeight: CGFloat = 620.0
     #endif
@@ -86,10 +82,32 @@ enum Sizes {
     static let priceHistoryChartHeight: CGFloat = 200
     /// Widest line length of the cooking mode's pages, so long steps stay readable on iPad and Mac.
     static let cookingReadableWidth: CGFloat = 720
+    /// Corner radius of the highlight behind an ingredient name in a cooking step.
+    static let ingredientMarkCornerRadius: CGFloat = 6
+    /// Diameter and line width of a cooking timer's progress ring.
+    static let cookingTimerRing: CGFloat = 32
+    static let cookingTimerRingLineWidth: CGFloat = 4
+    /// Widest the time of a cooking timer gets in the compact Dynamic Island.
+    static let cookingTimerCompactWidth: CGFloat = 56
     /// Widest line length of the onboarding, login start and What's New screens, so the feature list stays compact on iPad and Mac.
     static let introductionReadableWidth: CGFloat = 520
     /// Width of the symbol column in an introduction feature row (scaled with Dynamic Type).
     static let introductionIconWidth: CGFloat = 44
     /// Height of the Grocy logo above the welcome title (scaled with Dynamic Type).
     static let introductionLogoHeight: CGFloat = 48
+    #if os(macOS)
+        /// A pane of the settings window: wide enough for a grouped form with a picker, and for the panes in the window's toolbar.
+        static let macOSSettingsWidth: CGFloat = 650
+        static let macOSSettingsHeight: CGFloat = 520
+        /// The first size of the app log's and the About window.
+        static let macOSAuxiliaryWindowWidth: CGFloat = 620
+        static let macOSAuxiliaryWindowHeight: CGFloat = 560
+        /// The smallest sheet that shows a list (`listSheetSize()`). A Mac sheet takes its content's size, and a list has
+        /// none of its own, so without it a journal's sheet shrinks to its toolbar.
+        static let macOSSheetMinWidth: CGFloat = 560
+        static let macOSSheetMinHeight: CGFloat = 480
+        /// The smallest filter sheet (`filterSheetSize()`): a few pickers.
+        static let macOSFilterSheetMinWidth: CGFloat = 420
+        static let macOSFilterSheetMinHeight: CGFloat = 320
+    #endif
 }

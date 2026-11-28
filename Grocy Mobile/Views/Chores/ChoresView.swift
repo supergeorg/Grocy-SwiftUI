@@ -44,6 +44,7 @@ struct ChoresView: View {
 
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
+    @State private var showAddChore = false
     @State private var filteredStatus: ChoreStatus = .all
     @State private var filteredUserID: Int? = nil
     @State private var sortOption: ChoresSortOption = .byName
@@ -214,18 +215,8 @@ struct ChoresView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if choresCount == 0 {
-                // Chores are created in master data, so there's no create action here.
-                ContentUnavailableView {
-                    Label("No chores", systemImage: MySymbols.chores)
-                } description: {
-                    Text("No chore defined. Please create one.")
-                }
-            } else if chores.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(filteredChores.sorted(by: sortComparator), id: \.id) { chore in
                 ChoreRowView(
@@ -294,7 +285,8 @@ struct ChoresView: View {
                         label: { Label("Skip", systemImage: MySymbols.choreSkipNext) }
                     )
                     .tint(.gray)
-                    .accessibilityHint("Skip next chore schedule")
+                    // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                    .accessibilityLabel("Skip next chore schedule")
                 }
                 .swipeActions(
                     edge: .leading,
@@ -309,7 +301,26 @@ struct ChoresView: View {
                         label: { Label("OK", systemImage: MySymbols.choreTrackNext) }
                     )
                     .tint(.green)
-                    .accessibilityHint("Track next chore schedule")
+                    // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                    .accessibilityLabel("Track next chore schedule")
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if choresCount == 0 {
+                    // Like the master data lists: the chore form opens right here.
+                    ContentUnavailableView {
+                        Label("No chores", systemImage: MySymbols.chores)
+                    } description: {
+                        Text("No chore defined. Please create one.")
+                    } actions: {
+                        Button("Create chore") {
+                            showAddChore = true
+                        }
+                    }
+                } else if chores.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }
@@ -344,6 +355,8 @@ struct ChoresView: View {
                     MDChoreFormView(existingChore: mdChore, isPopup: true)
                 }
             }
+            // The chore log is a list.
+            .listSheetSize()
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
@@ -351,6 +364,7 @@ struct ChoresView: View {
                     action: { showingFilterSheet = true },
                     label: {
                         Label("Filter", systemImage: MySymbols.filter)
+                            .macHelp("Filter")
                     }
                 )
                 .badge(numFilters)
@@ -363,9 +377,18 @@ struct ChoresView: View {
                     },
                     label: {
                         Label("Chores journal", systemImage: MySymbols.stockJournal)
+                            .macHelp("Chores journal")
                     }
                 )
             }
+        }
+        .sheet(isPresented: $showAddChore, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
+                MDChoreFormView(isPopup: true)
+            }
+            #if os(macOS)
+                .presentationSizing(.form)
+            #endif
         }
         .sheet(isPresented: $showingFilterSheet) {
             NavigationStack {
@@ -402,6 +425,8 @@ struct ChoresView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .environment(choreInteractionRouter)
     }
@@ -456,6 +481,7 @@ struct ChoresView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

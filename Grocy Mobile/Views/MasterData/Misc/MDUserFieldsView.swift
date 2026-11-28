@@ -83,7 +83,10 @@ struct MDUserFieldsView: View {
                         action: {
                             showAddUserField.toggle()
                         },
-                        label: { Label("Create", systemImage: MySymbols.new) }
+                        label: {
+                            Label("Create", systemImage: MySymbols.new)
+                                .macHelp("Create")
+                        }
                     )
                 }
                 #if os(iOS)
@@ -91,31 +94,23 @@ struct MDUserFieldsView: View {
                 #endif
             }
             .navigationTitle("Userfields")
-            #if os(iOS)
-                .sheet(
-                    isPresented: self.$showAddUserField,
-                    content: {
-                        NavigationStack {
-                            MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
-                        }
-                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            .sheet(
+                isPresented: self.$showAddUserField,
+                content: {
+                    NavigationStack {
+                        MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField)
                     }
-                )
-            #else
-                .navigationDestination(
-                    isPresented: $showAddUserField,
-                    destination: { MDUserFieldFormView(isNewUserField: true, showAddUserField: $showAddUserField) }
-                )
-            #endif
+                    #if os(iOS)
+                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                    #else
+                        .presentationSizing(.form)
+                    #endif
+                }
+            )
     }
 
     var content: some View {
         List {
-            if grocyVM.mdUserFields.isEmpty {
-                ContentUnavailableView("No userfields found.", systemImage: MySymbols.userfields)
-            } else if filteredUserFields.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserFields) { userField in
                 NavigationLink(destination: MDUserFieldFormView(isNewUserField: false, userField: userField, showAddUserField: .constant(false))) {
                     MDUserFieldRowView(userField: userField)
@@ -131,6 +126,13 @@ struct MDUserFieldsView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.mdUserFields.isEmpty {
+                ContentUnavailableView("No userfields found.", systemImage: MySymbols.userfields)
+            } else if filteredUserFields.isEmpty {
+                ContentUnavailableView.search
             }
         }
         .task {

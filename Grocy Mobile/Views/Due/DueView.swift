@@ -99,18 +99,6 @@ struct DueView: View {
         let counts = Dictionary(grouping: allItems, by: \.kind).mapValues(\.count)
 
         List {
-            if grocyVM.failedToLoadObjects.contains(where: { dataToUpdate.contains($0) })
-                || grocyVM.failedToLoadAdditionalObjects.contains(where: { additionalDataToUpdate.contains($0) })
-            {
-                ServerProblemView()
-            } else if items.isEmpty {
-                ContentUnavailableView {
-                    Label("Nothing due", systemImage: MySymbols.done)
-                } description: {
-                    Text("Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here.")
-                }
-            }
-
             ForEach(DueUrgency.allCases) { urgency in
                 let group = items.filter { $0.urgency == urgency }
                 if !group.isEmpty {
@@ -125,6 +113,19 @@ struct DueView: View {
                             toggleCollapsed(urgency)
                         }
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.contains(where: { dataToUpdate.contains($0) })
+                || grocyVM.failedToLoadAdditionalObjects.contains(where: { additionalDataToUpdate.contains($0) })
+            {
+                ServerProblemView()
+            } else if items.isEmpty {
+                ContentUnavailableView {
+                    Label("Nothing due", systemImage: MySymbols.done)
+                } description: {
+                    Text("Products, chores, tasks and batteries that are overdue or due soon, and products below their minimum stock amount, show up here.")
                 }
             }
         }
@@ -154,6 +155,7 @@ struct DueView: View {
                 } label: {
                     // Not the filter symbol: this chooses which kinds the agenda shows at all, the capsules filter them.
                     Label("Show", systemImage: MySymbols.show)
+                        .macHelp("Show")
                 }
             }
         }
@@ -181,6 +183,8 @@ struct DueView: View {
                     MDChoreFormView(existingChore: mdChore, isPopup: true)
                 }
             }
+            // The chore log is a list.
+            .listSheetSize()
             .environment(choreInteractionRouter)
         }
         .stockInteractionSheet(router: stockInteractionRouter)
@@ -202,6 +206,8 @@ struct DueView: View {
                     MDBatteryFormView(existingBattery: mdBattery, isPopup: true)
                 }
             }
+            // The battery journal is a list.
+            .listSheetSize()
             .environment(batteryInteractionRouter)
         }
         .alert(
@@ -346,7 +352,8 @@ struct DueView: View {
                 Label("OK", systemImage: doneIcon(for: item))
             }
             .tint(.green)
-            .accessibilityHint(Text(doneTitle(for: item)))
+            // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+            .accessibilityLabel(Text(doneTitle(for: item)))
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             if case .chore(let chore) = item.source {
@@ -356,7 +363,8 @@ struct DueView: View {
                     Label("Skip", systemImage: MySymbols.choreSkipNext)
                 }
                 .tint(.gray)
-                .accessibilityHint("Skip next chore schedule")
+                // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                .accessibilityLabel("Skip next chore schedule")
             }
         }
         .contextMenu {

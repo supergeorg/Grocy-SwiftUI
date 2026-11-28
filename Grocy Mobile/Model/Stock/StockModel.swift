@@ -115,8 +115,30 @@ class StockElement: Codable, Equatable {
         self.displayProduct = product
     }
 
+    /// A stored element that a sync deleted (its product left the stock). Its attributes can't be read anymore: reading one
+    /// that was never loaded crashes SwiftData ("backing data was detached from a context"). Display-only elements
+    /// (`init(notInStock:)`) are never stored, so they're never removed.
+    var isRemoved: Bool {
+        displayProduct == nil && (isDeleted || modelContext == nil)
+    }
+
+    /// Takes over the server's values for the same product, so the stored element stays the same object.
+    func update(from other: StockElement) {
+        if amount != other.amount { amount = other.amount }
+        if amountAggregated != other.amountAggregated { amountAggregated = other.amountAggregated }
+        if value != other.value { value = other.value }
+        if bestBeforeDate != other.bestBeforeDate { bestBeforeDate = other.bestBeforeDate }
+        if amountOpened != other.amountOpened { amountOpened = other.amountOpened }
+        if amountOpenedAggregated != other.amountOpenedAggregated { amountOpenedAggregated = other.amountOpenedAggregated }
+        if isAggregatedAmount != other.isAggregatedAmount { isAggregatedAmount = other.isAggregatedAmount }
+        if dueType != other.dueType { dueType = other.dueType }
+    }
+
     static func == (lhs: StockElement, rhs: StockElement) -> Bool {
-        lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
+        // The same object is equal without reading it: a sync may have deleted it, and reading an attribute of a deleted
+        // element that was never loaded crashes SwiftData ("backing data was detached from a context").
+        if lhs === rhs { return true }
+        return lhs.amount == rhs.amount && lhs.amountAggregated == rhs.amountAggregated && lhs.value == rhs.value && lhs.bestBeforeDate == rhs.bestBeforeDate
             && lhs.amountOpened == rhs.amountOpened
             && lhs.amountOpenedAggregated == rhs.amountOpenedAggregated && lhs.isAggregatedAmount == rhs.isAggregatedAmount && lhs.dueType == rhs.dueType
             && lhs.productID == rhs.productID

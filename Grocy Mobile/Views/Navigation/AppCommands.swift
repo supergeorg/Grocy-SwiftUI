@@ -76,6 +76,8 @@ struct AppCommands: Commands {
     enum AppWindow {
         static let appLog = "appLog"
         static let about = "about"
+        /// A recipe's cooking mode, one window per recipe ID.
+        static let cooking = "cooking"
     }
 
     /// The app menu's "About" opens the app's own information (with the translators and the thanks to Grocy),

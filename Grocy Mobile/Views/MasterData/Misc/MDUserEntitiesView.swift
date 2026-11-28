@@ -80,7 +80,10 @@ struct MDUserEntitiesView: View {
                         action: {
                             showAddUserEntity.toggle()
                         },
-                        label: { Label("Create", systemImage: MySymbols.new) }
+                        label: {
+                            Label("Create", systemImage: MySymbols.new)
+                                .macHelp("Create")
+                        }
                     )
                 }
                 #if os(iOS)
@@ -88,31 +91,23 @@ struct MDUserEntitiesView: View {
                 #endif
             }
             .navigationTitle("Userentities")
-            #if os(iOS)
-                .sheet(
-                    isPresented: self.$showAddUserEntity,
-                    content: {
-                        NavigationStack {
-                            MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
-                        }
-                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            .sheet(
+                isPresented: self.$showAddUserEntity,
+                content: {
+                    NavigationStack {
+                        MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity)
                     }
-                )
-            #else
-                .navigationDestination(
-                    isPresented: $showAddUserEntity,
-                    destination: { MDUserEntityFormView(isNewUserEntity: true, showAddUserEntity: $showAddUserEntity) }
-                )
-            #endif
+                    #if os(iOS)
+                        .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                    #else
+                        .presentationSizing(.form)
+                    #endif
+                }
+            )
     }
 
     var content: some View {
         List {
-            if grocyVM.mdUserEntities.isEmpty {
-                ContentUnavailableView("No userentities found.", systemImage: MySymbols.userEntities)
-            } else if filteredUserEntities.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserEntities) { userEntity in
                 NavigationLink(destination: UserObjectsView(userEntity: userEntity)) {
                     MDUserEntityRowView(userEntity: userEntity)
@@ -128,6 +123,13 @@ struct MDUserEntitiesView: View {
                         )
                     }
                 )
+            }
+        }
+        .overlay {
+            if grocyVM.mdUserEntities.isEmpty {
+                ContentUnavailableView("No userentities found.", systemImage: MySymbols.userEntities)
+            } else if filteredUserEntities.isEmpty {
+                ContentUnavailableView.search
             }
         }
         .task {

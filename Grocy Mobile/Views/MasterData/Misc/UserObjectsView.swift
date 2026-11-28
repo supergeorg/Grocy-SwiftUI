@@ -78,17 +78,6 @@ struct UserObjectsView: View {
 
     var content: some View {
         List {
-            if fields.isEmpty {
-                ContentUnavailableView(
-                    "No userfields found.",
-                    systemImage: MySymbols.userfields,
-                    description: Text("The records of a user entity consist of its userfields. Add them in the userfields.")
-                )
-            } else if userObjects.isEmpty {
-                ContentUnavailableView("No records found.", systemImage: MySymbols.userEntities)
-            } else if filteredUserObjects.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUserObjects) { userObject in
                 NavigationLink {
                     UserObjectFormView(userEntity: userEntity, existingUserObject: userObject)
@@ -103,6 +92,19 @@ struct UserObjectsView: View {
                 }
             }
         }
+        .overlay {
+            if fields.isEmpty {
+                ContentUnavailableView(
+                    "No userfields found.",
+                    systemImage: MySymbols.userfields,
+                    description: Text("The records of a user entity consist of its userfields. Add them in the userfields.")
+                )
+            } else if userObjects.isEmpty {
+                ContentUnavailableView("No records found.", systemImage: MySymbols.userEntities)
+            } else if filteredUserObjects.isEmpty {
+                ContentUnavailableView.search
+            }
+        }
         .navigationTitle(userEntity.caption)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -110,6 +112,7 @@ struct UserObjectsView: View {
                     MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: .constant(false))
                 } label: {
                     Label("Edit userentity", systemImage: MySymbols.edit)
+                        .macHelp("Edit userentity")
                 }
             }
             ToolbarItem(placement: .primaryAction) {
@@ -130,18 +133,16 @@ struct UserObjectsView: View {
         }
         .searchable(text: $searchString, prompt: "Search")
         .animation(.default, value: filteredUserObjects.count)
-        #if os(iOS)
-            .sheet(isPresented: $showAddUserObject, onDismiss: { Task { await updateData() } }) {
-                NavigationStack {
-                    UserObjectFormView(userEntity: userEntity)
-                }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
-            }
-        #else
-            .navigationDestination(isPresented: $showAddUserObject) {
+        .sheet(isPresented: $showAddUserObject, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
                 UserObjectFormView(userEntity: userEntity)
             }
-        #endif
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .alert("Do you really want to delete this record?", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {

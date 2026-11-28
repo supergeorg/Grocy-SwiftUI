@@ -30,6 +30,49 @@ enum StockInteraction: Hashable, Identifiable {
     case editProduct(stockElement: StockElement)
 
     var id: Self { self }
+
+    /// The product's stock element, for the interactions of one product.
+    private var stockElement: StockElement? {
+        switch self {
+        case .purchaseProduct, .consumeProduct, .transferProduct, .inventoryProduct, .stockJournal: nil
+        case .addToShL(let element), .productPurchase(let element), .productConsume(let element), .productTransfer(let element),
+            .productInventory(let element), .productOverview(let element), .productJournal(let element), .productEntries(let element),
+            .productRecipes(let element), .editProduct(let element):
+            element
+        }
+    }
+
+    /// The case without its element, to compare the kind of interaction.
+    private var kind: Int {
+        switch self {
+        case .purchaseProduct: 0
+        case .consumeProduct: 1
+        case .transferProduct: 2
+        case .inventoryProduct: 3
+        case .stockJournal: 4
+        case .addToShL: 5
+        case .productPurchase: 6
+        case .productConsume: 7
+        case .productTransfer: 8
+        case .productInventory: 9
+        case .productOverview: 10
+        case .productJournal: 11
+        case .productEntries: 12
+        case .productRecipes: 13
+        case .editProduct: 14
+        }
+    }
+
+    // Compared by the element's identity, not its values: while a sheet is open, a stock sync can delete the element
+    // (the product left the stock), and reading a deleted model's attributes crashes SwiftData.
+    static func == (lhs: StockInteraction, rhs: StockInteraction) -> Bool {
+        lhs.kind == rhs.kind && lhs.stockElement.map(ObjectIdentifier.init) == rhs.stockElement.map(ObjectIdentifier.init)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(kind)
+        hasher.combine(stockElement.map(ObjectIdentifier.init))
+    }
 }
 
 enum StockGrouping: String, Codable, Sendable {
@@ -215,10 +258,16 @@ struct StockView: View {
         }
     }
 
+    /// The filtered and grouped stock. Not `Equatable` on purpose: `@State` compares a new `Equatable` value with the
+    /// old one, and the old one can hold elements a sync has deleted. `StockElement.==` reads their attributes, which
+    /// crashes SwiftData ("backing data was detached from a context").
+    private struct StockListCache {
+        var filtered: [StockElement] = []
+        var grouped: [AnyHashable: [StockElement]] = [:]
+    }
+
     // Cached filtered/grouped results to prevent blocking during filter changes
-    @State private var cachedFilteredStock: [StockElement] = []
-    @State private var cachedGroupedStock: [AnyHashable: [StockElement]] = [:]
-    @State private var filterComputationTask: Task<Void, Never>?
+    @State private var cachedStockList = StockListCache()
 
     private let dataToUpdate: [ObjectEntities] = [
         .products, .shopping_locations, .locations, .product_groups, .quantity_units, .shopping_lists, .shopping_list, .stock, .stock_current_locations,
@@ -275,17 +324,20 @@ struct StockView: View {
         cachedMissingStock = elements
     }
 
+    // The cache can still hold elements a sync removed since it was computed (their product left the stock);
+    // their attributes can't be read anymore, so they're left out until the next computation.
     var filteredAndSearchedStock: [StockElement] {
-        cachedFilteredStock
+        cachedStockList.filtered.filter { !$0.isRemoved }
     }
 
     var groupedStock: [AnyHashable: [StockElement]] {
-        cachedGroupedStock
+        cachedStockList.grouped.compactMapValues { elements in
+            let live = elements.filter { !$0.isRemoved }
+            return live.isEmpty ? nil : live
+        }
     }
 
     private func computeFilteredAndGroupedStock() {
-        filterComputationTask?.cancel()
-
         // Capture only Sendable primitives from SwiftData objects (on main thread)
         let searchString = self.searchString
         // A location filter stored before location tracking was turned off on the server no longer applies.
@@ -316,91 +368,88 @@ struct StockView: View {
             }
         }
 
-        filterComputationTask = Task {
-            // Run computation on main thread to avoid Sendable/ModelContext issues
-            var grouped: [AnyHashable: [StockElement]] = [:]
-            var filtered: [StockElement] = []
+        // Synchronous, on the main actor: a later task could read elements that a sync deleted in between, which crashes SwiftData.
+        var grouped: [AnyHashable: [StockElement]] = [:]
+        var filtered: [StockElement] = []
 
-            let allStock = stock + missingStock
+        let allStock = stock + missingStock
 
-            for element in allStock {
-                // Quick reject checks
-                guard !(element.product?.hideOnStockOverview ?? false) else { continue }
+        for element in allStock {
+            // A sync may have removed the element since it was captured; reading it would crash.
+            guard !element.isRemoved else { continue }
+            // Quick reject checks
+            guard !(element.product?.hideOnStockOverview ?? false) else { continue }
 
-                // Search filter
-                if !searchString.isEmpty {
-                    let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
-                    let parentProductNameMatches =
-                        element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
+            // Search filter
+            if !searchString.isEmpty {
+                let productNameMatches = element.product?.name.localizedStandardContains(searchString) ?? false
+                let parentProductNameMatches =
+                    element.product?.parentProductID.flatMap { productNamesByID[$0]?.localizedStandardContains(searchString) } ?? false
 
-                    if !productNameMatches && !parentProductNameMatches {
-                        continue
-                    }
-                }
-
-                // Product group filter
-                if let groupID = filteredProductGroupID,
-                    element.product?.productGroupID != groupID
-                {
+                if !productNameMatches && !parentProductNameMatches {
                     continue
-                }
-
-                // Location filter
-                if let productIDsAtFilteredLocation, !productIDsAtFilteredLocation.contains(element.productID) {
-                    continue
-                }
-
-                // Status filter
-                let productID = element.productID
-
-                let passesStatus =
-                    filteredStatus == .all
-                    || (filteredStatus == .belowMinStock && missingProductIDs.contains(productID))
-                    || (filteredStatus == .expiringSoon && dueProductIDs.contains(productID))
-                    || (filteredStatus == .overdue && overdueProductIDs.contains(productID) && !expiredProductIDs.contains(productID))
-                    || (filteredStatus == .expired && expiredProductIDs.contains(productID))
-
-                if !passesStatus { continue }
-
-                // Compute group key
-                let groupKey: AnyHashable = {
-                    switch stockGrouping {
-                    case .none:
-                        return ""
-                    case .productGroup:
-                        return element.product?.productGroupID ?? 0
-                    case .nextDueDate:
-                        return element.bestBeforeDate as AnyHashable
-                    case .lastPurchased:
-                        return lastPurchasedByProductID[productID] as AnyHashable
-                    case .minStockAmount:
-                        return element.product?.minStockAmount ?? 0
-                    case .parentProduct:
-                        return element.product?.parentProductID ?? 0
-                    case .defaultLocation:
-                        return element.product?.locationID ?? 0
-                    }
-                }()
-
-                if grouped[groupKey] != nil {
-                    grouped[groupKey]?.append(element)
-                } else {
-                    grouped[groupKey] = [element]
                 }
             }
 
-            // Sort each group
-            for key in grouped.keys {
-                grouped[key]?.sort(using: sortSetting)
+            // Product group filter
+            if let groupID = filteredProductGroupID,
+                element.product?.productGroupID != groupID
+            {
+                continue
             }
 
-            filtered = grouped.values.flatMap { $0 }
+            // Location filter
+            if let productIDsAtFilteredLocation, !productIDsAtFilteredLocation.contains(element.productID) {
+                continue
+            }
 
-            if !Task.isCancelled {
-                self.cachedGroupedStock = grouped
-                self.cachedFilteredStock = filtered
+            // Status filter
+            let productID = element.productID
+
+            let passesStatus =
+                filteredStatus == .all
+                || (filteredStatus == .belowMinStock && missingProductIDs.contains(productID))
+                || (filteredStatus == .expiringSoon && dueProductIDs.contains(productID))
+                || (filteredStatus == .overdue && overdueProductIDs.contains(productID) && !expiredProductIDs.contains(productID))
+                || (filteredStatus == .expired && expiredProductIDs.contains(productID))
+
+            if !passesStatus { continue }
+
+            // Compute group key
+            let groupKey: AnyHashable = {
+                switch stockGrouping {
+                case .none:
+                    return ""
+                case .productGroup:
+                    return element.product?.productGroupID ?? 0
+                case .nextDueDate:
+                    return element.bestBeforeDate as AnyHashable
+                case .lastPurchased:
+                    return lastPurchasedByProductID[productID] as AnyHashable
+                case .minStockAmount:
+                    return element.product?.minStockAmount ?? 0
+                case .parentProduct:
+                    return element.product?.parentProductID ?? 0
+                case .defaultLocation:
+                    return element.product?.locationID ?? 0
+                }
+            }()
+
+            if grouped[groupKey] != nil {
+                grouped[groupKey]?.append(element)
+            } else {
+                grouped[groupKey] = [element]
             }
         }
+
+        // Sort each group
+        for key in grouped.keys {
+            grouped[key]?.sort(using: sortSetting)
+        }
+
+        filtered = grouped.values.flatMap { $0 }
+
+        self.cachedStockList = StockListCache(filtered: filtered, grouped: grouped)
     }
 
     @State private var cachedSummedValue: Double = 0
@@ -539,10 +588,18 @@ struct StockView: View {
             stockInteractionRouter.present(interaction)
         } label: {
             switch interaction {
-            case .inventoryProduct: Label("Inventory", systemImage: MySymbols.inventory)
-            case .transferProduct: Label("Transfer", systemImage: MySymbols.transfer)
-            case .consumeProduct: Label("Consume", systemImage: MySymbols.consume)
-            case .purchaseProduct: Label("Purchase", systemImage: MySymbols.purchase)
+            case .inventoryProduct:
+                Label("Inventory", systemImage: MySymbols.inventory)
+                    .macHelp("Inventory")
+            case .transferProduct:
+                Label("Transfer", systemImage: MySymbols.transfer)
+                    .macHelp("Transfer")
+            case .consumeProduct:
+                Label("Consume", systemImage: MySymbols.consume)
+                    .macHelp("Consume")
+            case .purchaseProduct:
+                Label("Purchase", systemImage: MySymbols.purchase)
+                    .macHelp("Purchase")
             default: EmptyView()
             }
         }
@@ -550,32 +607,36 @@ struct StockView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if (stock + missingStock).isEmpty {
-                ContentUnavailableView {
-                    Label("Stock is empty.", systemImage: MySymbols.stockOverview)
-                } actions: {
-                    Button("Purchase") {
-                        stockInteractionRouter.present(.purchaseProduct)
-                    }
-                }
-            } else if filteredAndSearchedStock.isEmpty {
-                if numFilters > 0 {
-                    // Say that filters hide products, so a product that exists isn't taken for missing (#253).
-                    ContentUnavailableView {
-                        Label("No products", systemImage: MySymbols.filter)
-                    } description: {
-                        Text("No product matches the filters.")
-                    } actions: {
-                        Button("Clear filter", action: clearFilters)
-                    }
-                } else {
-                    ContentUnavailableView.search
-                }
             }
             stockListContent
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if (stock + missingStock).isEmpty {
+                    ContentUnavailableView {
+                        Label("Stock is empty.", systemImage: MySymbols.stockOverview)
+                    } actions: {
+                        Button("Purchase") {
+                            stockInteractionRouter.present(.purchaseProduct)
+                        }
+                    }
+                } else if filteredAndSearchedStock.isEmpty {
+                    if numFilters > 0 {
+                        // Say that filters hide products, so a product that exists isn't taken for missing (#253).
+                        ContentUnavailableView {
+                            Label("No products", systemImage: MySymbols.filter)
+                        } description: {
+                            Text("No product matches the filters.")
+                        } actions: {
+                            Button("Clear filter", action: clearFilters)
+                        }
+                    } else {
+                        ContentUnavailableView.search
+                    }
+                }
+            }
         }
         .refreshable {
             await updateData()
@@ -587,6 +648,12 @@ struct StockView: View {
         .navigationTitle("Stock overview")
         .searchable(text: $searchString, prompt: "Search")
         .animation(.default, value: filteredStatus)
+        .onAppear {
+            // The saved stock right away, so the rows are there in the first layout: on macOS, rows a list gets later
+            // in a split view's detail keep the estimated height and width until the window is resized.
+            updateMissingStock()
+            computeFilteredAndGroupedStock()
+        }
         .task {
             await updateData()
             updateMissingStock()
@@ -650,6 +717,7 @@ struct StockView: View {
             ToolbarItemGroup(placement: .navigation) {
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
                 sortMenu
@@ -662,6 +730,7 @@ struct StockView: View {
                     },
                     label: {
                         Label("Stock journal", systemImage: MySymbols.stockJournal)
+                            .macHelp("Stock journal")
                     }
                 )
             }
@@ -680,6 +749,7 @@ struct StockView: View {
                             }
                         } label: {
                             Label("Stock actions", systemImage: MySymbols.stockActions)
+                                .macHelp("Stock actions")
                         }
                     }
                     .matchedTransitionSource(id: StockInteractionZoom.actionsSourceID, in: stockInteractionTransition)
@@ -707,48 +777,49 @@ struct StockView: View {
             .stockInteractionSheet(router: stockInteractionRouter)
         #endif
         .stockEntriesDestination()
-        #if os(iOS)
-            .sheet(isPresented: $showingFilterSheet) {
-                NavigationStack {
-                    StockFilterView(
-                        filteredLocationID: $filteredLocationID,
-                        filteredProductGroupID: $filteredProductGroupID,
-                        filteredStatus: filteredStatusBinding
-                    )
-                    .navigationTitle("Filter")
+        .sheet(isPresented: $showingFilterSheet) {
+            NavigationStack {
+                StockFilterView(
+                    filteredLocationID: $filteredLocationID,
+                    filteredProductGroupID: $filteredProductGroupID,
+                    filteredStatus: filteredStatusBinding
+                )
+                .navigationTitle("Filter")
+                #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(
-                            placement: .confirmationAction,
-                            content: {
-                                Button(
-                                    role: .confirm,
-                                    action: {
-                                        showingFilterSheet = false
-                                    }
-                                )
-                            }
-                        )
-                        ToolbarItem(
-                            placement: .cancellationAction,
-                            content: {
-                                Button(
-                                    role: .destructive,
-                                    action: {
-                                        filteredLocationID = nil
-                                        filteredProductGroupID = nil
-                                        storageFilteredStatus = .all
-                                        showingFilterSheet = false
-                                    }
-                                )
-                            }
-                        )
-                    }
+                #endif
+                .toolbar {
+                    ToolbarItem(
+                        placement: .confirmationAction,
+                        content: {
+                            Button(
+                                role: .confirm,
+                                action: {
+                                    showingFilterSheet = false
+                                }
+                            )
+                        }
+                    )
+                    ToolbarItem(
+                        placement: .cancellationAction,
+                        content: {
+                            Button(
+                                role: .destructive,
+                                action: {
+                                    filteredLocationID = nil
+                                    filteredProductGroupID = nil
+                                    storageFilteredStatus = .all
+                                    showingFilterSheet = false
+                                }
+                            )
+                        }
+                    )
                 }
-                .presentationDetents([.medium])
-
             }
-        #endif
+            .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
+        }
     }
 
     var sortMenu: some View {
@@ -837,6 +908,7 @@ struct StockView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

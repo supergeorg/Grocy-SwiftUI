@@ -77,10 +77,6 @@ struct MDBarcodesView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProductBarcodesCount == 0 {
-                ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
-            } else if mdProductBarcodes.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdProductBarcodes, id: \.id) { productBarcode in
                 NavigationLink(
@@ -106,6 +102,15 @@ struct MDBarcodesView: View {
                 )
             }
         }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdProductBarcodesCount == 0 {
+                    ContentUnavailableView("No barcodes found.", systemImage: MySymbols.barcode)
+                } else if mdProductBarcodes.isEmpty {
+                    ContentUnavailableView.search
+                }
+            }
+        }
         .navigationTitle("Barcodes")
         .task {
             await updateData()
@@ -127,6 +132,8 @@ struct MDBarcodesView: View {
                             Image(systemName: MySymbols.new)
                         }
                     )
+                    .accessibilityLabel(Text("Add barcode"))
+                    .macHelp("Add barcode")
                 }
             )
         })
@@ -145,21 +152,15 @@ struct MDBarcodesView: View {
             },
             message: { Text(productBarcodeToDelete?.barcode ?? "Name not found") }
         )
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddBarcode,
-                content: {
-                    NavigationStack {
-                        MDBarcodeFormView(product: product)
-                    }
+        .sheet(
+            isPresented: $showAddBarcode,
+            content: {
+                NavigationStack {
+                    MDBarcodeFormView(product: product)
                 }
-            )
-        #else
-            .navigationDestination(
-                isPresented: $showAddBarcode,
-                destination: { MDBarcodeFormView(product: product) }
-            )
-        #endif
+                .presentationSizing(.form)
+            }
+        )
         .navigationDestination(
             for: MDProductBarcode.self,
             destination: { productBarcode in

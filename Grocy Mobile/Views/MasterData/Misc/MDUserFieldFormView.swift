@@ -176,15 +176,13 @@ struct MDUserFieldFormView: View {
                     .disabled(!isNameCorrect || !isCaptionCorrect || entity.isEmpty || isProcessing)
                     .keyboardShortcut(.defaultAction)
                 }
-                #if os(iOS)
-                    ToolbarItem(placement: .cancellationAction) {
-                        if isNewUserField {
-                            Button(role: .cancel) {
-                                finishForm()
-                            }
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewUserField {
+                        Button(role: .cancel) {
+                            finishForm()
                         }
                     }
-                #endif
+                }
             })
             .sensoryFeedback(.success, trigger: isSuccessful == true)
             .sensoryFeedback(.error, trigger: isSuccessful == false)

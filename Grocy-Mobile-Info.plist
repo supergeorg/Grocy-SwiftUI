@@ -32,6 +32,10 @@
 	<array>
 		<string>georgappdev.Grocy.reminderSync</string>
 	</array>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Cooking timers alert you when the time is up, also when the iPhone is locked or in Silent Mode.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

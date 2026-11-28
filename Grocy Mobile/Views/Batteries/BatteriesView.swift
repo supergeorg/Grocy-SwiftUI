@@ -45,6 +45,7 @@ struct BatteriesView: View {
     @State private var searchString: String = ""
     @State private var filteredStatus: BatteryStatus = .all
     @State private var showingFilterSheet = false
+    @State private var showAddBattery = false
     @State private var sortOption: BatteriesSortOption = .byName
     @State private var sortOrder: SortOrder = .forward
     @State private var trackedCount: Int = 0
@@ -153,24 +154,8 @@ struct BatteriesView: View {
 
     var body: some View {
         List {
-
             if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if batteriesCount == 0 {
-                // Batteries are created in master data, so there's no create action here.
-                ContentUnavailableView {
-                    Label("No batteries", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("No battery defined. Create one in master data.")
-                }
-            } else if batteries.isEmpty {
-                ContentUnavailableView.search
-            } else if filteredBatteries.isEmpty {
-                ContentUnavailableView {
-                    Label("No batteries", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("No battery matches this filter.")
-                }
             }
             ForEach(filteredBatteries.sorted(by: sortComparator), id: \.id) { battery in
                 let status = BatteryStatus.status(of: battery, dueSoonDays: dueSoonDays)
@@ -220,8 +205,33 @@ struct BatteriesView: View {
                             Label("Charge", systemImage: MySymbols.batteryCharge)
                         }
                         .tint(.green)
-                        .accessibilityHint("Track charge cycle")
+                        // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                        .accessibilityLabel("Track charge cycle")
                     }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count == 0 {
+                if batteriesCount == 0 {
+                    // Like the master data lists: the battery form opens right here.
+                    ContentUnavailableView {
+                        Label("No batteries", systemImage: MySymbols.batteries)
+                    } description: {
+                        Text("No battery defined. Please create one.")
+                    } actions: {
+                        Button("Create battery") {
+                            showAddBattery = true
+                        }
+                    }
+                } else if batteries.isEmpty {
+                    ContentUnavailableView.search
+                } else if filteredBatteries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No batteries", systemImage: MySymbols.batteries)
+                    } description: {
+                        Text("No battery matches this filter.")
+                    }
+                }
             }
         }
         .refreshable {
@@ -250,6 +260,8 @@ struct BatteriesView: View {
                     MDBatteryFormView(existingBattery: mdBattery, isPopup: true)
                 }
             }
+            // The battery journal is a list.
+            .listSheetSize()
         }
         .alert(
             "Couldn't track the charge cycle",
@@ -271,6 +283,7 @@ struct BatteriesView: View {
                     showingFilterSheet = true
                 } label: {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
                 sortGroupMenu
@@ -280,8 +293,17 @@ struct BatteriesView: View {
                     batteryInteractionRouter.present(.batteryJournal(batteryID: nil))
                 } label: {
                     Label("Batteries journal", systemImage: MySymbols.stockJournal)
+                        .macHelp("Batteries journal")
                 }
             }
+        }
+        .sheet(isPresented: $showAddBattery, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
+                MDBatteryFormView(isPopup: true)
+            }
+            #if os(macOS)
+                .presentationSizing(.form)
+            #endif
         }
         .sheet(isPresented: $showingFilterSheet) {
             NavigationStack {
@@ -305,6 +327,8 @@ struct BatteriesView: View {
                     }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .environment(batteryInteractionRouter)
     }
@@ -345,6 +369,7 @@ struct BatteriesView: View {
             #endif
         } label: {
             Label("Sort", systemImage: MySymbols.sort)
+                .macHelp("Sort")
         }
     }
 }

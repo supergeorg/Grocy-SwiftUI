@@ -216,10 +216,6 @@ struct StockJournalView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if stockJournalCount == 0 {
-                ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
-            } else if stockJournal.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(stockJournalSorted, id: \.id) { (journalEntry: StockJournalEntry) in
                 StockJournalRowView(
@@ -248,6 +244,15 @@ struct StockJournalView: View {
                 )
             }
         }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if stockJournalCount == 0 {
+                    ContentUnavailableView("No transactions found.", systemImage: MySymbols.stockJournal)
+                } else if stockJournal.isEmpty {
+                    ContentUnavailableView.search
+                }
+            }
+        }
         .navigationTitle("Stock journal")
         .toolbar {
             if isPopup {
@@ -268,6 +273,7 @@ struct StockJournalView: View {
                 sortGroupMenu
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
             }
@@ -324,6 +330,8 @@ struct StockJournalView: View {
                 }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .refreshable {
             await updateData()
@@ -399,6 +407,7 @@ struct StockJournalView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

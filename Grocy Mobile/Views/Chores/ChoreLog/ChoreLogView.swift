@@ -193,10 +193,6 @@ struct ChoreLogView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if choreLogCount == 0 {
-                ContentUnavailableView("No chore log entries found.", systemImage: MySymbols.chores)
-            } else if choreLog.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(choreLog, id: \.id) { (choreLogEntry: ChoreLogEntry) in
                 ChoreLogRowView(
@@ -224,6 +220,15 @@ struct ChoreLogView: View {
                 )
             }
         }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if choreLogCount == 0 {
+                    ContentUnavailableView("No chore log entries found.", systemImage: MySymbols.chores)
+                } else if choreLog.isEmpty {
+                    ContentUnavailableView.search
+                }
+            }
+        }
         .navigationTitle("Chores journal")
         .toolbar {
             if isPopup {
@@ -244,6 +249,7 @@ struct ChoreLogView: View {
                 sortGroupMenu
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
             }
             #if os(iOS)
@@ -294,6 +300,8 @@ struct ChoreLogView: View {
                 }
             }
             .presentationDetents([.medium])
+            // The filter is a list of pickers.
+            .filterSheetSize()
         }
         .refreshable {
             await updateData()
@@ -359,6 +367,7 @@ struct ChoreLogView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

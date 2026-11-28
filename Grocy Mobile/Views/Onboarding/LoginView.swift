@@ -99,6 +99,7 @@ struct LoginView: View {
                             destination: URL(string: "https://github.com/supergeorg/Grocy-SwiftUI")!,
                             label: {
                                 Label("Github", systemImage: MySymbols.api)
+                                    .macHelp("Github")
                             }
                         )
                     }
@@ -111,6 +112,7 @@ struct LoginView: View {
                             label: {
                                 // The toolbar already draws the glass; a second glass effect inside it would stack.
                                 Label("Grocy", systemImage: MySymbols.website)
+                                    .macHelp("Grocy")
                             }
                         )
                     }
@@ -123,6 +125,7 @@ struct LoginView: View {
                             showAbout.toggle()
                         } label: {
                             Label("About this app", systemImage: MySymbols.info)
+                                .macHelp("About this app")
                         }
                         .sheet(
                             isPresented: $showAbout,
@@ -154,6 +157,7 @@ struct LoginView: View {
                             showSettings.toggle()
                         } label: {
                             Label("Settings", systemImage: MySymbols.settings)
+                                .macHelp("Settings")
                         }
                         .sheet(
                             isPresented: $showSettings,

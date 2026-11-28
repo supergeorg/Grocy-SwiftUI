@@ -269,30 +269,13 @@ struct RecipeImportView: View {
         isProcessing = false
     }
 
-    /// The Grocy ingredient for an imported one. Grocy stores the amount in the product's stock unit
-    /// and the chosen unit only for displaying it, so the amount is converted here.
+    /// The Grocy ingredient for an imported one, with the next free ID.
     private func recipePos(for ingredient: ImportedIngredient, recipeID: Int, usedIDs: inout Set<Int>) -> RecipePos? {
-        guard let productID = ingredient.productID, let product = mdProducts.first(where: { $0.id == productID }) else { return nil }
-        let quID = ingredient.quID ?? product.quIDConsume
-        let stockAmount = mapper.stockAmount(for: ingredient.amount, quID: quID, product: product)
-
         var id = 1
         while usedIDs.contains(id) { id += 1 }
+        guard let recipePos = mapper.recipePos(for: ingredient, id: id, recipeID: recipeID) else { return nil }
         usedIDs.insert(id)
-
-        return RecipePos(
-            id: id,
-            recipeID: recipeID,
-            productID: productID,
-            // With "only check if any amount is in stock", Grocy keeps the amount as entered
-            amount: ingredient.onlyCheckSingleUnitInStock ? ingredient.amount : (stockAmount ?? ingredient.amount),
-            note: ingredient.note,
-            quID: quID,
-            // Without a conversion, Grocy can only check whether any amount is in stock
-            onlyCheckSingleUnitInStock: ingredient.onlyCheckSingleUnitInStock || stockAmount == nil,
-            ingredientGroup: ingredient.ingredientGroup,
-            variableAmount: ingredient.variableAmount
-        )
+        return recipePos
     }
 
     /// Downloads the recipe's picture and uploads it to Grocy. Returns the file name, or `nil` when it failed.

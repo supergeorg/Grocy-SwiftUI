@@ -234,9 +234,12 @@ struct UserFormView: View {
             await updateData()
         }
         .toolbar(content: {
-            ToolbarItem(placement: .cancellationAction) {
-                Button(role: .cancel) {
-                    dismiss()
+            // New users and one's own profile open in a sheet; other users are pushed onto the user management, with a back button.
+            if isNewUser || editsOwnProfile {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .cancel) {
+                        dismiss()
+                    }
                 }
             }
             ToolbarItem(placement: .confirmationAction) {

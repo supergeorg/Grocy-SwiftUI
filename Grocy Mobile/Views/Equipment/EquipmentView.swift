@@ -74,19 +74,6 @@ struct EquipmentView: View {
 
     var content: some View {
         List {
-            if equipmentCount == 0 {
-                ContentUnavailableView {
-                    Label("No equipment", systemImage: MySymbols.equipment)
-                } description: {
-                    Text("No equipment defined. Please create one.")
-                } actions: {
-                    Button("Create equipment") {
-                        showAddEquipment = true
-                    }
-                }
-            } else if equipment.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(equipment, id: \.id) { item in
                 NavigationLink(value: item) {
                     EquipmentRowView(equipment: item)
@@ -101,16 +88,31 @@ struct EquipmentView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(isPresented: $showAddEquipment) {
-                NavigationStack {
-                    EquipmentFormView(isPopup: true)
+        .overlay {
+            if equipmentCount == 0 {
+                ContentUnavailableView {
+                    Label("No equipment", systemImage: MySymbols.equipment)
+                } description: {
+                    Text("No equipment defined. Please create one.")
+                } actions: {
+                    Button("Create equipment") {
+                        showAddEquipment = true
+                    }
                 }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            } else if equipment.isEmpty {
+                ContentUnavailableView.search
             }
-        #else
-            .navigationDestination(isPresented: $showAddEquipment) { EquipmentFormView() }
-        #endif
+        }
+        .sheet(isPresented: $showAddEquipment) {
+            NavigationStack {
+                EquipmentFormView(isPopup: true)
+            }
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .navigationDestination(for: MDEquipment.self) { item in
             EquipmentDetailsView(equipment: item)
         }
@@ -158,6 +160,7 @@ struct EquipmentView: View {
                     showAddEquipment.toggle()
                 } label: {
                     Label("Create equipment", systemImage: MySymbols.new)
+                        .macHelp("Create equipment")
                 }
             }
             #if os(iOS)

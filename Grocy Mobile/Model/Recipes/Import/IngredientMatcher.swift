@@ -240,10 +240,15 @@ extension RecipeImportMapper {
     /// Exact: the name or plural name, any spelling of the same known unit ("g" finds "Gramm" or "grams"),
     /// or a word of the unit's name ("g" finds "Gramm (g)"). Suggested: the same word stem ("Dosen" finds "Dose")
     /// or an abbreviation of the name ("Scheib" finds "Scheibe").
-    func quantityUnitMatch(for unit: String, knownUnit: KnownIngredientUnit?) -> (unit: MDQuantityUnit, quality: IngredientMatchQuality)? {
+    ///
+    /// When several units fit (e.g. "Pck." fits "Pack" and "Packung"), the one the product can use is preferred
+    /// (see `preferredUnits(for:)`), so the amount can be converted to the product's stock unit.
+    func quantityUnitMatch(for unit: String, knownUnit: KnownIngredientUnit?, product: MDProduct? = nil) -> (
+        unit: MDQuantityUnit, quality: IngredientMatchQuality
+    )? {
         let token = unit.normalizedUnitToken
         guard !token.isEmpty else { return nil }
-        let activeUnits = quantityUnits.filter(\.active)
+        let activeUnits = preferredUnits(for: product)
         let spellings = Set([token] + (knownUnit?.aliases ?? []))
 
         func names(of quantityUnit: MDQuantityUnit) -> [String] {
@@ -272,6 +277,24 @@ extension RecipeImportMapper {
             return (abbreviated, .suggested)
         }
         return nil
+    }
+
+    /// The active quantity units, best first for `product`: its own units and the ones that convert to its stock unit,
+    /// then the ones other products use (a household's "Stück" before Grocy's unused default "Piece"), then the rest.
+    func preferredUnits(for product: MDProduct?) -> [MDQuantityUnit] {
+        let usedIDs = Set(products.flatMap { [$0.quIDStock, $0.quIDPurchase, $0.quIDConsume] })
+        func rank(_ quantityUnit: MDQuantityUnit) -> Int {
+            if let product {
+                let ownIDs = [product.quIDStock, product.quIDPurchase, product.quIDConsume, product.quIDPrice]
+                if ownIDs.contains(quantityUnit.id) || stockAmount(for: 1, quID: quantityUnit.id, product: product) != nil {
+                    return 0
+                }
+            }
+            return usedIDs.contains(quantityUnit.id) ? 1 : 2
+        }
+        return quantityUnits.filter(\.active).enumerated()
+            .sorted { (rank($0.element), $0.offset) < (rank($1.element), $1.offset) }
+            .map(\.element)
     }
 
     /// The words of a unit name, without parentheses and punctuation ("Gramm (g)" → "gramm", "g").

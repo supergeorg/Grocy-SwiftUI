@@ -15,5 +15,8 @@ struct Grocy_WidgetBundle: WidgetBundle {
         ShoppingListWidget()
         ChoresWidget()
         TasksWidget()
+        #if os(iOS)
+            CookingTimerLiveActivity()
+        #endif
     }
 }

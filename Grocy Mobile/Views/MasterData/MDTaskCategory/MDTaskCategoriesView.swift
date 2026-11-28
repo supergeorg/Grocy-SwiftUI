@@ -78,18 +78,6 @@ struct MDTaskCategoriesView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdTaskCategoriesCount == 0 {
-                ContentUnavailableView {
-                    Label("No task categories", systemImage: MySymbols.tasks)
-                } description: {
-                    Text("No task category defined. Please create one.")
-                } actions: {
-                    Button("Create task category") {
-                        showAddTaskCategory = true
-                    }
-                }
-            } else if mdTaskCategories.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdTaskCategories, id: \.id) { taskCategory in
                 NavigationLink(value: taskCategory) {
@@ -108,19 +96,36 @@ struct MDTaskCategoriesView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddTaskCategory,
-                content: {
-                    NavigationStack {
-                        MDTaskCategoryFormView()
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdTaskCategoriesCount == 0 {
+                    ContentUnavailableView {
+                        Label("No task categories", systemImage: MySymbols.tasks)
+                    } description: {
+                        Text("No task category defined. Please create one.")
+                    } actions: {
+                        Button("Create task category") {
+                            showAddTaskCategory = true
+                        }
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                } else if mdTaskCategories.isEmpty {
+                    ContentUnavailableView.search
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddTaskCategory, destination: { MDTaskCategoryFormView() })
-        #endif
+            }
+        }
+        .sheet(
+            isPresented: $showAddTaskCategory,
+            content: {
+                NavigationStack {
+                    MDTaskCategoryFormView()
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationTitle("Task categories")
         .navigationDestination(
             for: MDTaskCategory.self,
@@ -145,6 +150,7 @@ struct MDTaskCategoriesView: View {
                         },
                         label: {
                             Label("Create task category", systemImage: MySymbols.new)
+                                .macHelp("Create task category")
                         }
                     )
                 }

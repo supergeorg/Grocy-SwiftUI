@@ -77,18 +77,6 @@ struct MDStoresView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdStoresCount == 0 {
-                ContentUnavailableView {
-                    Label("No stores", systemImage: MySymbols.store)
-                } description: {
-                    Text("No store defined. Please create one.")
-                } actions: {
-                    Button("Create store") {
-                        showAddStore = true
-                    }
-                }
-            } else if mdStores.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdStores, id: \.id) { store in
                 NavigationLink(value: store) {
@@ -107,19 +95,36 @@ struct MDStoresView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddStore,
-                content: {
-                    NavigationStack {
-                        MDStoreFormView()
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdStoresCount == 0 {
+                    ContentUnavailableView {
+                        Label("No stores", systemImage: MySymbols.store)
+                    } description: {
+                        Text("No store defined. Please create one.")
+                    } actions: {
+                        Button("Create store") {
+                            showAddStore = true
+                        }
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                } else if mdStores.isEmpty {
+                    ContentUnavailableView.search
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddStore, destination: { MDStoreFormView() })
-        #endif
+            }
+        }
+        .sheet(
+            isPresented: $showAddStore,
+            content: {
+                NavigationStack {
+                    MDStoreFormView()
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDStore.self,
             destination: { store in
@@ -181,6 +186,7 @@ struct MDStoresView: View {
                         },
                         label: {
                             Label("Create store", systemImage: MySymbols.new)
+                                .macHelp("Create store")
                         }
                     )
                 }

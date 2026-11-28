@@ -63,16 +63,6 @@ struct MealPlanSectionsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdMealPlanSections.isEmpty {
-                ContentUnavailableView {
-                    Label("No meal plan sections", systemImage: MySymbols.mealPlanSection)
-                } description: {
-                    Text("Sections group the meal plan's days, like breakfast, lunch and dinner.")
-                } actions: {
-                    Button("Create meal plan section") {
-                        showAddSection = true
-                    }
-                }
             }
             ForEach(mdMealPlanSections, id: \.id) { section in
                 NavigationLink(value: section) {
@@ -91,6 +81,21 @@ struct MealPlanSectionsView: View {
                 )
             }
         }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdMealPlanSections.isEmpty {
+                    ContentUnavailableView {
+                        Label("No meal plan sections", systemImage: MySymbols.mealPlanSection)
+                    } description: {
+                        Text("Sections group the meal plan's days, like breakfast, lunch and dinner.")
+                    } actions: {
+                        Button("Create meal plan section") {
+                            showAddSection = true
+                        }
+                    }
+                }
+            }
+        }
         #if os(macOS)
             // A Mac sheet shows only its confirmation and cancellation buttons, not the toolbar's create button.
             .safeAreaBar(edge: .bottom) {
@@ -105,19 +110,19 @@ struct MealPlanSectionsView: View {
                 .padding(Spacing.medium)
             }
         #endif
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddSection,
-                content: {
-                    NavigationStack {
-                        MealPlanSectionFormView()
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddSection,
+            content: {
+                NavigationStack {
+                    MealPlanSectionFormView()
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddSection, destination: { MealPlanSectionFormView() })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationTitle("Meal plan sections")
         .navigationDestination(
             for: MDMealPlanSection.self,
@@ -147,6 +152,7 @@ struct MealPlanSectionsView: View {
                             },
                             label: {
                                 Label("Create meal plan section", systemImage: MySymbols.new)
+                                    .macHelp("Create meal plan section")
                             }
                         )
                     }

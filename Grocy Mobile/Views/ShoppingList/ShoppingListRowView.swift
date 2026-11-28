@@ -116,7 +116,8 @@ struct ShoppingListRowView: View {
                         label: { Label("Done", systemImage: MySymbols.done) }
                     )
                     .tint(.green)
-                    .accessibilityHint(!shoppingListItem.done ? "Mark this item as done" : "Mark this item as undone")
+                    // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                    .accessibilityLabel(!shoppingListItem.done ? "Mark this item as done" : "Mark this item as undone")
                     if shoppingListItem.productID != nil {
                         Button(
                             action: {

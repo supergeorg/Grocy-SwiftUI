@@ -76,16 +76,6 @@ struct MDQuantityUnitsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdQuantityUnitsCount == 0 {
-                ContentUnavailableView {
-                    Label("No quantity units", systemImage: MySymbols.quantityUnit)
-                } actions: {
-                    Button("Create quantity unit") {
-                        showAddQuantityUnit = true
-                    }
-                }
-            } else if mdQuantityUnits.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdQuantityUnits, id: \.id) { quantityUnit in
                 NavigationLink(value: quantityUnit) {
@@ -104,19 +94,34 @@ struct MDQuantityUnitsView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddQuantityUnit,
-                content: {
-                    NavigationStack {
-                        MDQuantityUnitFormView()
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdQuantityUnitsCount == 0 {
+                    ContentUnavailableView {
+                        Label("No quantity units", systemImage: MySymbols.quantityUnit)
+                    } actions: {
+                        Button("Create quantity unit") {
+                            showAddQuantityUnit = true
+                        }
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                } else if mdQuantityUnits.isEmpty {
+                    ContentUnavailableView.search
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddQuantityUnit, destination: { MDQuantityUnitFormView() })
-        #endif
+            }
+        }
+        .sheet(
+            isPresented: $showAddQuantityUnit,
+            content: {
+                NavigationStack {
+                    MDQuantityUnitFormView()
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDQuantityUnit.self,
             destination: { quantityUnit in
@@ -142,6 +147,7 @@ struct MDQuantityUnitsView: View {
                     },
                     label: {
                         Label("Create quantity unit", systemImage: MySymbols.new)
+                            .macHelp("Create quantity unit")
                     }
                 )
             }

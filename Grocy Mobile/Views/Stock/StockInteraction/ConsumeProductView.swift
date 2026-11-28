@@ -484,7 +484,7 @@ struct ConsumeProductView: View {
                 )
             }
             if productToConsumeID == nil {
-                ToolbarItem(id: "clear", placement: .cancellationAction) {
+                ToolbarItem(id: "clear", placement: .clearFormAction) {
                     if !quickScan {
                         Button(
                             action: {
@@ -493,7 +493,7 @@ struct ConsumeProductView: View {
                             },
                             label: {
                                 Label("Clear", systemImage: MySymbols.cancel)
-                                    .help("Clear")
+                                    .macHelp("Clear")
                             }
                         )
                         .keyboardShortcut("r", modifiers: [.command])
@@ -502,6 +502,12 @@ struct ConsumeProductView: View {
                     }
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToConsumeID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             if features.openedTracking && ((consumeType == .open) || (consumeType == .both)) {
                 ToolbarItem(id: "open", placement: .primaryAction) {
                     Button(
@@ -515,6 +521,7 @@ struct ConsumeProductView: View {
                             // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                             // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                             Label("Mark as opened", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.open)
+                                .macHelp("Mark as opened")
                                 .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                                 .labelStyle(.titleAndIcon)
                         }
@@ -524,6 +531,12 @@ struct ConsumeProductView: View {
                     .keyboardShortcut("o", modifiers: [.command])
                 }
             }
+            #if os(macOS)
+                // Opening and consuming are separate actions, so they don't share a button group.
+                if features.openedTracking && consumeType == .both {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             if (consumeType == .consume) || (consumeType == .both) {
                 ToolbarItem(id: "consume", placement: .primaryAction) {
                     Button(
@@ -537,6 +550,7 @@ struct ConsumeProductView: View {
                             // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                             // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                             Label("Consume product", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.consume)
+                                .macHelp("Consume product")
                                 .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                                 .labelStyle(.titleAndIcon)
                         }

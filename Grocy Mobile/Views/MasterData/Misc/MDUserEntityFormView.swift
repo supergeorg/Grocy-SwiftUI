@@ -143,15 +143,13 @@ struct MDUserEntityFormView: View {
                     .disabled(!isNameCorrect || !isCaptionCorrect || isProcessing)
                     .keyboardShortcut(.defaultAction)
                 }
-                #if os(iOS)
-                    ToolbarItem(placement: .cancellationAction) {
-                        if isNewUserEntity {
-                            Button(role: .cancel) {
-                                finishForm()
-                            }
+                ToolbarItem(placement: .cancellationAction) {
+                    if isNewUserEntity {
+                        Button(role: .cancel) {
+                            finishForm()
                         }
                     }
-                #endif
+                }
             })
             .sensoryFeedback(.success, trigger: isSuccessful == true)
             .sensoryFeedback(.error, trigger: isSuccessful == false)

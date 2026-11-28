@@ -80,19 +80,6 @@ struct MDLocationsView: View {
 
     var content: some View {
         List {
-            if mdLocationsCount == 0 {
-                ContentUnavailableView {
-                    Label("No locations", systemImage: MySymbols.location)
-                } description: {
-                    Text("No location defined. Please create one.")
-                } actions: {
-                    Button("Create location") {
-                        showAddLocation = true
-                    }
-                }
-            } else if mdLocations.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(mdLocations, id: \.id) { location in
                 NavigationLink(value: location) {
                     MDLocationRowView(location: location)
@@ -110,19 +97,34 @@ struct MDLocationsView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddLocation,
-                content: {
-                    NavigationStack {
-                        MDLocationFormView()
+        .overlay {
+            if mdLocationsCount == 0 {
+                ContentUnavailableView {
+                    Label("No locations", systemImage: MySymbols.location)
+                } description: {
+                    Text("No location defined. Please create one.")
+                } actions: {
+                    Button("Create location") {
+                        showAddLocation = true
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddLocation, destination: { MDLocationFormView() })
-        #endif
+            } else if mdLocations.isEmpty {
+                ContentUnavailableView.search
+            }
+        }
+        .sheet(
+            isPresented: $showAddLocation,
+            content: {
+                NavigationStack {
+                    MDLocationFormView()
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDLocation.self,
             destination: { location in
@@ -184,6 +186,7 @@ struct MDLocationsView: View {
                         },
                         label: {
                             Label("Create location", systemImage: MySymbols.new)
+                                .macHelp("Create location")
                         }
                     )
                 }

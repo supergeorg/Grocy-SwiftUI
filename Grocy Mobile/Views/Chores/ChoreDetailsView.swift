@@ -147,6 +147,7 @@ struct ChoreDetailsView: View {
                         },
                         label: {
                             Label("Chore journal", systemImage: MySymbols.stockJournal)
+                                .macHelp("Chore journal")
                         }
                     )
                     Button(
@@ -157,6 +158,7 @@ struct ChoreDetailsView: View {
                         },
                         label: {
                             Label("Edit chore", systemImage: MySymbols.edit)
+                                .macHelp("Edit chore")
                         }
                     )
                 }

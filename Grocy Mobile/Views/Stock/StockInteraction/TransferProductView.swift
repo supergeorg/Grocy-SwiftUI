@@ -296,7 +296,7 @@ struct TransferProductView: View {
                 )
             }
             if productToTransferID == nil {
-                ToolbarItem(id: "reset", placement: .cancellationAction) {
+                ToolbarItem(id: "reset", placement: .clearFormAction) {
                     Button(
                         action: {
                             actionPending = false
@@ -304,7 +304,7 @@ struct TransferProductView: View {
                         },
                         label: {
                             Label("Clear", systemImage: MySymbols.cancel)
-                                .help("Clear")
+                                .macHelp("Clear")
                         }
                     )
                     .keyboardShortcut("r", modifiers: [.command])
@@ -312,6 +312,12 @@ struct TransferProductView: View {
                     .disabled(isProcessingAction)
                 }
             }
+            #if os(macOS)
+                // Apart from the actions, so clearing the form isn't clicked by mistake.
+                if productToTransferID == nil {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             ToolbarItem(id: "transfer", placement: .primaryAction) {
                 Button(
                     role: .confirm,
@@ -324,6 +330,7 @@ struct TransferProductView: View {
                         // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Transfer", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.transfer)
+                            .macHelp("Transfer")
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                             .labelStyle(.titleAndIcon)
                     }

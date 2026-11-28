@@ -57,6 +57,44 @@ struct SwiftDataSyncTests {
         #expect(stored.map(\.id) == [2])
     }
 
+    @Test("Syncing the stock again updates the stored element in place, so views holding it keep a live object")
+    func stockSyncKeepsElement() throws {
+        try sync.syncStockElements([try stockElement(productID: 1, amount: 1), try stockElement(productID: 2)])
+        let original = try #require(try context.fetch(FetchDescriptor<StockElement>(predicate: #Predicate { $0.productID == 1 })).first)
+        let originalID = original.persistentModelID
+
+        try sync.syncStockElements([try stockElement(productID: 1, amount: 3), try stockElement(productID: 2)])
+
+        let stored = try context.fetch(FetchDescriptor<StockElement>(sortBy: [SortDescriptor(\.productID)]))
+        #expect(stored.count == 2)
+        #expect(stored.first?.persistentModelID == originalID)
+        #expect(original.amount == 3)
+        #expect(original.dueType == .bestBefore)
+    }
+
+    @Test("A product that left the stock loses its stock element")
+    func stockSyncDeletesRemovedProduct() throws {
+        try sync.syncStockElements([try stockElement(productID: 1), try stockElement(productID: 2)])
+        try sync.syncStockElements([try stockElement(productID: 2)])
+
+        let stored = try context.fetch(FetchDescriptor<StockElement>())
+        #expect(stored.map(\.productID) == [2])
+    }
+
+    @Test("A stock element the sync deleted is marked removed, a live or display-only one isn't")
+    func removedStockElementIsMarked() throws {
+        try sync.syncStockElements([try stockElement(productID: 1), try stockElement(productID: 2)])
+        let elements = try context.fetch(FetchDescriptor<StockElement>(sortBy: [SortDescriptor(\.productID)]))
+        let leaving = try #require(elements.first { $0.productID == 1 })
+        let staying = try #require(elements.first { $0.productID == 2 })
+        #expect(!leaving.isRemoved)
+
+        try sync.syncStockElements([try stockElement(productID: 2)])
+        #expect(leaving.isRemoved)
+        #expect(!staying.isRemoved)
+        #expect(!StockElement(notInStock: MDProduct(id: 3, name: "Not in stock")).isRemoved)
+    }
+
     @Test("Updating a product keeps the stock element's link to it")
     func productUpdateKeepsStockLink() throws {
         try sync.syncPersistentCollection([MDProduct(id: 1, name: "Milk")])

@@ -205,18 +205,18 @@ struct RecipeImportMapper {
 
     private func resetUnit(of ingredient: inout ImportedIngredient) {
         let line = ingredient.line
-        let match = line.unit.flatMap { quantityUnitMatch(for: $0, knownUnit: line.knownUnit) }
+        let product = products.first(where: { $0.id == ingredient.productID })
+        let match = line.unit.flatMap { quantityUnitMatch(for: $0, knownUnit: line.knownUnit, product: product) }
         ingredient.quID = match?.unit.id
         ingredient.unitMatch = match?.quality ?? .none
         ingredient.onlyCheckSingleUnitInStock = false
         ingredient.variableAmount = rangeText(of: line)
-        let product = products.first(where: { $0.id == ingredient.productID })
         let isUnitClear: Bool
         if line.unit != nil {
             isUnitClear = match?.quality == .exact
         } else if let product, line.amount != nil, isMeasure(quantityUnitID: product.quIDConsume) {
             // "1 Zwiebel" counts pieces, which the product's consume unit (e.g. grams) can't hold
-            if let pieceUnit {
+            if let pieceUnit = pieceUnit(for: product) {
                 ingredient.quID = pieceUnit.id
                 isUnitClear = true
             } else {
@@ -228,9 +228,9 @@ struct RecipeImportMapper {
         applyUnitRules(to: &ingredient, product: product, unmatchedUnit: match == nil ? line.unit : nil, isUnitClear: isUnitClear)
     }
 
-    /// The quantity unit for pieces, e.g. "Stück" or "Piece".
-    private var pieceUnit: MDQuantityUnit? {
-        quantityUnits.first { quantityUnit in
+    /// The quantity unit for pieces, e.g. "Stück" or "Piece", preferably one the product can use.
+    private func pieceUnit(for product: MDProduct) -> MDQuantityUnit? {
+        preferredUnits(for: product).first { quantityUnit in
             [quantityUnit.name, quantityUnit.namePlural].contains { KnownIngredientUnit.matching($0) == .piece }
         }
     }
@@ -321,6 +321,29 @@ struct RecipeImportMapper {
 
     static func stockAmount(for amount: Double, quID: Int, product: MDProduct, conversions: MDQuantityUnitConversions) -> Double? {
         RecipeAmountConversion.stockAmount(for: amount, quID: quID, product: product, conversions: conversions)
+    }
+
+    // MARK: Saving
+
+    /// The Grocy ingredient for an imported one, or `nil` without a product. Grocy stores the amount in the product's stock unit
+    /// and the chosen unit only for displaying it, so the amount is converted here.
+    func recipePos(for ingredient: ImportedIngredient, id: Int, recipeID: Int) -> RecipePos? {
+        guard let productID = ingredient.productID, let product = products.first(where: { $0.id == productID }) else { return nil }
+        let quID = ingredient.quID ?? product.quIDConsume
+        let stockAmount = stockAmount(for: ingredient.amount, quID: quID, product: product)
+        return RecipePos(
+            id: id,
+            recipeID: recipeID,
+            productID: productID,
+            // With "only check if any amount is in stock", Grocy keeps the amount as entered
+            amount: ingredient.onlyCheckSingleUnitInStock ? ingredient.amount : (stockAmount ?? ingredient.amount),
+            note: ingredient.note,
+            quID: quID,
+            // Without a conversion, Grocy can only check whether any amount is in stock
+            onlyCheckSingleUnitInStock: ingredient.onlyCheckSingleUnitInStock || stockAmount == nil,
+            ingredientGroup: ingredient.ingredientGroup,
+            variableAmount: ingredient.variableAmount
+        )
     }
 
     // MARK: Servings

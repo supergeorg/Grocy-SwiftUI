@@ -69,19 +69,6 @@ struct MDBatteriesView: View {
 
     var content: some View {
         List {
-            if batteriesCount == 0 {
-                ContentUnavailableView {
-                    Label("No batteries", systemImage: MySymbols.batteries)
-                } description: {
-                    Text("No battery defined. Please create one.")
-                } actions: {
-                    Button("Create battery") {
-                        showAddBattery = true
-                    }
-                }
-            } else if mdBatteries.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(mdBatteries, id: \.id) { battery in
                 NavigationLink(value: battery) {
                     MDBatteryRowView(battery: battery)
@@ -95,16 +82,31 @@ struct MDBatteriesView: View {
                 }
             }
         }
-        #if os(iOS)
-            .sheet(isPresented: $showAddBattery) {
-                NavigationStack {
-                    MDBatteryFormView(isPopup: true)
+        .overlay {
+            if batteriesCount == 0 {
+                ContentUnavailableView {
+                    Label("No batteries", systemImage: MySymbols.batteries)
+                } description: {
+                    Text("No battery defined. Please create one.")
+                } actions: {
+                    Button("Create battery") {
+                        showAddBattery = true
+                    }
                 }
-                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            } else if mdBatteries.isEmpty {
+                ContentUnavailableView.search
             }
-        #else
-            .navigationDestination(isPresented: $showAddBattery) { MDBatteryFormView() }
-        #endif
+        }
+        .sheet(isPresented: $showAddBattery) {
+            NavigationStack {
+                MDBatteryFormView(isPopup: true)
+            }
+            #if os(iOS)
+                .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+            #else
+                .presentationSizing(.form)
+            #endif
+        }
         .navigationDestination(for: MDBattery.self) { battery in
             MDBatteryFormView(existingBattery: battery)
         }
@@ -152,6 +154,7 @@ struct MDBatteriesView: View {
                     showAddBattery.toggle()
                 } label: {
                     Label("Create battery", systemImage: MySymbols.new)
+                        .macHelp("Create battery")
                 }
             }
             #if os(iOS)

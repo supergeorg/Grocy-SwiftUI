@@ -31,17 +31,6 @@ struct ServerSelectionView: View {
 
     var body: some View {
         List {
-            if serverProfiles.isEmpty {
-                ContentUnavailableView {
-                    Label("No servers", systemImage: MySymbols.ownServer)
-                } description: {
-                    Text("No server added yet. Please add one.")
-                } actions: {
-                    Button("Add server") {
-                        showAddServer = true
-                    }
-                }
-            }
             ForEach(serverProfiles, id: \.id) { serverProfile in
                 Button(
                     action: {
@@ -57,6 +46,19 @@ struct ServerSelectionView: View {
                 })
             }
             .onDelete(perform: deleteProfiles)
+        }
+        .overlay {
+            if serverProfiles.isEmpty {
+                ContentUnavailableView {
+                    Label("No servers", systemImage: MySymbols.ownServer)
+                } description: {
+                    Text("No server added yet. Please add one.")
+                } actions: {
+                    Button("Add server") {
+                        showAddServer = true
+                    }
+                }
+            }
         }
         .navigationTitle("Own server")
         .onAppear {
@@ -75,6 +77,7 @@ struct ServerSelectionView: View {
                         },
                         label: {
                             Label("Add server", systemImage: MySymbols.new)
+                                .macHelp("Add server")
                         }
                     )
                 }

@@ -78,19 +78,6 @@ struct MDChoresView: View {
 
     var content: some View {
         List {
-            if choresCount == 0 {
-                ContentUnavailableView {
-                    Label("No chores", systemImage: MySymbols.chores)
-                } description: {
-                    Text("No chore defined. Please create one.")
-                } actions: {
-                    Button("Create chore") {
-                        showAddChore = true
-                    }
-                }
-            } else if mdChores.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(mdChores, id: \.id) { chore in
                 NavigationLink(value: chore) {
                     MDChoreRowView(chore: chore)
@@ -108,19 +95,34 @@ struct MDChoresView: View {
                 )
             }
         }
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddChore,
-                content: {
-                    NavigationStack {
-                        MDChoreFormView(isPopup: true)
+        .overlay {
+            if choresCount == 0 {
+                ContentUnavailableView {
+                    Label("No chores", systemImage: MySymbols.chores)
+                } description: {
+                    Text("No chore defined. Please create one.")
+                } actions: {
+                    Button("Create chore") {
+                        showAddChore = true
                     }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddChore, destination: { MDChoreFormView() })
-        #endif
+            } else if mdChores.isEmpty {
+                ContentUnavailableView.search
+            }
+        }
+        .sheet(
+            isPresented: $showAddChore,
+            content: {
+                NavigationStack {
+                    MDChoreFormView(isPopup: true)
+                }
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(
             for: MDChore.self,
             destination: { chore in
@@ -178,6 +180,7 @@ struct MDChoresView: View {
                         },
                         label: {
                             Label("Create chore", systemImage: MySymbols.new)
+                                .macHelp("Create chore")
                         }
                     )
                 }

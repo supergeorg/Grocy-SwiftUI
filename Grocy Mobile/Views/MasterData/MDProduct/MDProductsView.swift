@@ -103,16 +103,6 @@ struct MDProductsView: View {
         List {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count > 0 {
                 ServerProblemView()
-            } else if mdProductsCount == 0 {
-                ContentUnavailableView {
-                    Label("No products", systemImage: MySymbols.product)
-                } actions: {
-                    Button("Create product") {
-                        showAddProduct = true
-                    }
-                }
-            } else if mdProducts.isEmpty {
-                ContentUnavailableView.search
             }
             ForEach(mdProducts, id: \.id) { product in
                 NavigationLink(value: product) {
@@ -144,6 +134,21 @@ struct MDProductsView: View {
                     } label: {
                         Label("Delete", systemImage: MySymbols.delete)
                     }
+                }
+            }
+        }
+        .overlay {
+            if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
+                if mdProductsCount == 0 {
+                    ContentUnavailableView {
+                        Label("No products", systemImage: MySymbols.product)
+                    } actions: {
+                        Button("Create product") {
+                            showAddProduct = true
+                        }
+                    }
+                } else if mdProducts.isEmpty {
+                    ContentUnavailableView.search
                 }
             }
         }
@@ -212,6 +217,7 @@ struct MDProductsView: View {
                         },
                         label: {
                             Label("Create product", systemImage: MySymbols.new)
+                                .macHelp("Create product")
                         }
                     )
                 }
@@ -221,19 +227,19 @@ struct MDProductsView: View {
             #endif
         })
         .navigationTitle("Products")
-        #if os(iOS)
-            .sheet(
-                isPresented: $showAddProduct,
-                content: {
-                    NavigationStack {
-                        MDProductFormView(userSettings: userSettings)
-                    }
-                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+        .sheet(
+            isPresented: $showAddProduct,
+            content: {
+                NavigationStack {
+                    MDProductFormView(userSettings: userSettings)
                 }
-            )
-        #else
-            .navigationDestination(isPresented: $showAddProduct, destination: { MDProductFormView(userSettings: userSettings) })
-        #endif
+                #if os(iOS)
+                    .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+        )
         .navigationDestination(item: $copiedProduct) { product in
             MDProductFormView(existingProduct: product, userSettings: userSettings)
         }

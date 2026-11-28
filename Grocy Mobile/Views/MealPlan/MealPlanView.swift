@@ -420,31 +420,25 @@ struct MealPlanView: View {
     /// The forms and sheets the meal plan opens; apart from `body`, which is too long to type-check otherwise.
     private func presentations(_ base: some View) -> some View {
         base
-            #if os(iOS)
-                .sheet(item: $formRequest) { request in
-                    NavigationStack {
-                        formView(for: request)
-                    }
-                    .zoomTransition(sourceID: ZoomTransitionID.add, in: addTransition, if: request.fromToolbar)
-                }
-                .sheet(item: dayToCopyBinding) { day in
-                    NavigationStack {
-                        MealPlanCopyDayView(sourceDay: day.date) { targetDay in
-                            await copyDay(day.date, to: targetDay)
-                        }
-                    }
-                    .presentationDetents([.medium])
-                }
-            #else
-                .navigationDestination(item: $formRequest) { request in
+            .sheet(item: $formRequest) { request in
+                NavigationStack {
                     formView(for: request)
                 }
-                .navigationDestination(item: dayToCopyBinding) { day in
+                #if os(iOS)
+                    .zoomTransition(sourceID: ZoomTransitionID.add, in: addTransition, if: request.fromToolbar)
+                #else
+                    .presentationSizing(.form)
+                #endif
+            }
+            .sheet(item: dayToCopyBinding) { day in
+                NavigationStack {
                     MealPlanCopyDayView(sourceDay: day.date) { targetDay in
                         await copyDay(day.date, to: targetDay)
                     }
                 }
-            #endif
+                .presentationDetents([.medium])
+                .presentationSizing(.form)
+            }
             // A sheet on the Mac too: the sections are edited aside, the meal plan stays where it was.
             .sheet(isPresented: $showSections) {
                 NavigationStack {
@@ -584,6 +578,7 @@ struct MealPlanView: View {
                 },
                 label: {
                     Label("Add to meal plan", systemImage: MySymbols.new)
+                        .macHelp("Add to meal plan")
                 }
             )
             .keyboardShortcut("n", modifiers: .command)
@@ -604,6 +599,7 @@ struct MealPlanView: View {
                     moreActions(lookup: lookup)
                 } label: {
                     Label("More", systemImage: MySymbols.moreActions)
+                        .macHelp("More")
                 }
             }
         #else

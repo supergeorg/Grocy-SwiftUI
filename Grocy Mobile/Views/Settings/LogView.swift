@@ -73,6 +73,7 @@ struct LogView: View {
                         Task { await grocyVM.getLogEntries() }
                     } label: {
                         Label("Reload", systemImage: MySymbols.reload)
+                            .macHelp("Reload")
                     }
                     .keyboardShortcut("r")
                 #endif
@@ -80,6 +81,7 @@ struct LogView: View {
                     shareFile()
                 } label: {
                     Label("Share", systemImage: MySymbols.share)
+                        .macHelp("Share")
                 }
             }
         }

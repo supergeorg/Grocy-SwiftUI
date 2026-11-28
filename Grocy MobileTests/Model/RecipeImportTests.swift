@@ -167,11 +167,74 @@ struct IngredientLineParserTests {
         let line = IngredientLineParser.parse("100 g Cr&egrave;me fra&icirc;che &amp; Sahne")
         #expect(line.name.contains("& Sahne"))
     }
+
+    @Test(
+        "Sizes, spoon modifiers, containers and preparations are notes",
+        arguments: [
+            ("1 EL, gehäuft Zucker", 1.0, "EL", "Zucker", "gehäuft"),
+            ("2 TL, gestr. Backpulver", 2.0, "TL", "Backpulver", "gestr."),
+            ("1 kl. Glas Kapern", 1.0, "Glas", "Kapern", "kl."),
+            ("1 kl. Bund Petersilie (zum Garnieren)", 1.0, "Bund", "Petersilie", "kl., zum Garnieren"),
+            ("1 small bunch of coriander leaves chopped", 1.0, "bunch", "coriander leaves", "small, chopped"),
+            ("400g can chopped tomatoes", 400.0, "g", "chopped tomatoes", "can"),
+            ("1 Paket Lasagneplatten", 1.0, "Paket", "Lasagneplatten", ""),
+            ("1 Knolle Fenchel", 1.0, "Knolle", "Fenchel", ""),
+        ]
+    )
+    func parsesNotes(text: String, amount: Double, unit: String, name: String, note: String) {
+        let line = IngredientLineParser.parse(text)
+        #expect(line.amount == amount)
+        #expect(line.unit == unit)
+        #expect(line.name == name)
+        #expect(line.note == note)
+    }
+
+    @Test(
+        "Sizes and preparations after the name don't hide the product",
+        arguments: [
+            ("1 große Zwiebel(n)", "Zwiebel", "große"),
+            ("2 large eggs", "eggs", "large"),
+            ("1 large onion chopped", "onion", "large, chopped"),
+            ("1 red pepper deseeded and thinly sliced", "red pepper", "deseeded and thinly sliced"),
+            ("6 chicken thighs boneless and skinless", "chicken thighs", "boneless and skinless"),
+            ("oil for deep frying", "oil", "for deep frying"),
+            ("1 tbsp sunflower oil plus extra for frying", "sunflower oil", "plus extra for frying"),
+            ("frozen peas", "frozen peas", ""),
+            ("4 skinless and boneless chicken breast cut into chunks", "chicken breast", "skinless and boneless, cut into chunks"),
+            ("3 x 400g cans chopped tomatoes", "chopped tomatoes", "400g"),
+        ]
+    )
+    func separatesPreparation(text: String, name: String, note: String) {
+        let line = IngredientLineParser.parse(text)
+        #expect(line.name == name)
+        #expect(line.note == note)
+    }
+
+    @Test("A preparation joined with \"and\" isn't split into another ingredient")
+    func preparationIsNotSplit() {
+        let line = IngredientLineParser.parse("1 red pepper deseeded and thinly sliced")
+        #expect(IngredientLineParser.split(line, language: "en") == nil)
+    }
 }
 
 @Suite("Recipe picture")
 @MainActor
 struct RecipePictureParsingTests {
+    @Test("A recipe in a graph that also holds other values is found")
+    func graphWithOtherValues() throws {
+        let json = #"{"@context":"https://schema.org","@graph":[{"@type":"WebPage"},[],{"@type":"Recipe","name":"Apple cake"}]}"#
+        let recipe = try #require(try RecipeParser.parse(jsonString: json).first)
+        #expect(recipe.name == "Apple cake")
+    }
+
+    @Test("JSON-LD in a script tag without quotes is found")
+    func unquotedScriptType() throws {
+        let html =
+            #"<html><head><script type=application/ld+json class=yoast-schema-graph>{"@context":"https://schema.org","@type":"Recipe","name":"Apple cake","recipeIngredient":["2 apples"]}</script></head></html>"#
+        let recipe = try #require(try RecipeParser.parse(html: html).first)
+        #expect(recipe.name == "Apple cake")
+    }
+
     private func page(jsonLD: String, head: String = "") -> String {
         "<html><head>\(head)<script type=\"application/ld+json\">\(jsonLD)</script></head><body></body></html>"
     }
@@ -319,6 +382,26 @@ struct RecipeImportMapperTests {
         // Mehl is stocked in kg: 500 g = 0.5 kg
         #expect(mapper.stockAmount(for: ingredient.amount, quID: gram.id, product: product) == 0.5)
         #expect(ingredient.onlyCheckSingleUnitInStock == false)
+    }
+
+    @Test("Of several fitting units, the one the product can use is chosen")
+    func prefersProductUnits() {
+        let pack = MDQuantityUnit(id: 5, name: "Pack", namePlural: "Packs")
+        let packung = MDQuantityUnit(id: 6, name: "Packung", namePlural: "Packungen")
+        let defaultPiece = MDQuantityUnit(id: 7, name: "Piece", namePlural: "Pieces")
+        let vanillaSugar = MDProduct(id: 1, name: "Vanillezucker", quIDPurchase: 6, quIDStock: 6, quIDConsume: 6)
+        let onion = MDProduct(id: 2, name: "Zwiebel", quIDPurchase: 4, quIDStock: 4, quIDConsume: 4)
+        let mapper = RecipeImportMapper(
+            products: [vanillaSugar, onion],
+            quantityUnits: [pack, defaultPiece, packung, piece],
+            conversions: []
+        )
+        #expect(mapper.quantityUnitMatch(for: "Pck", knownUnit: .package, product: vanillaSugar)?.unit.id == packung.id)
+        let sugar = mapper.ingredient(from: IngredientLineParser.parse("1 Pck. Vanillezucker"))
+        #expect(sugar.quID == packung.id)
+        #expect(sugar.onlyCheckSingleUnitInStock == false)
+        // Without a product, the unit other products use comes before Grocy's unused default unit
+        #expect(mapper.quantityUnitMatch(for: "Stk", knownUnit: .piece)?.unit.id == piece.id)
     }
 
     @Test("Known unit spellings find the quantity unit")

@@ -368,8 +368,8 @@ public enum RecipeParser {
     // MARK: HTML Extraction
 
     private static func jsonLDBlocks(in html: String) -> [String] {
-        // Handles: single/double quotes, extra attributes before/after type, any capitalisation
-        let pattern = #"<script[^>]+type=["']application/ld\+json["'][^>]*>([\s\S]*?)</script>"#
+        // Handles: single, double or no quotes (minified pages like Love and Lemons), extra attributes before/after type, any capitalisation
+        let pattern = #"<script[^>]+type=["']?application/ld\+json["']?[^>]*>([\s\S]*?)</script>"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { return [] }
         let ns = html as NSString
         return
@@ -518,8 +518,15 @@ public enum RecipeParser {
     private static func collectNodes(_ dict: JSON) -> [JSON] {
         var found: [JSON] = []
         if normaliseTypes(dict["@type"]).contains("Recipe") { found.append(dict) }
-        if let graph = dict["@graph"] as? [JSON] { found += graph.flatMap { collectNodes($0) } }
+        // Not `[JSON]`: a graph can hold other values, like the empty array on Love and Lemons, which would hide the whole graph
+        if let graph = dict["@graph"] as? [Any] { found += graph.flatMap(collectNodes(in:)) }
         return found
+    }
+
+    private static func collectNodes(in value: Any) -> [JSON] {
+        if let dict = value as? JSON { return collectNodes(dict) }
+        if let array = value as? [Any] { return array.flatMap(collectNodes(in:)) }
+        return []
     }
 
     // MARK: Model Builder

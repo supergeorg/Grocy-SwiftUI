@@ -146,11 +146,13 @@ struct BatteryDetailsView: View {
                         batteryInteractionRouter.present(.trackChargeCycle(batteryID: batteryID))
                     } label: {
                         Label("Track charge cycle", systemImage: MySymbols.batteryCharge)
+                            .macHelp("Track charge cycle")
                     }
                     Button {
                         batteryInteractionRouter.present(.batteryJournal(batteryID: batteryID))
                     } label: {
                         Label("Battery journal", systemImage: MySymbols.stockJournal)
+                            .macHelp("Battery journal")
                     }
                     Button {
                         if let mdBattery {
@@ -158,6 +160,7 @@ struct BatteryDetailsView: View {
                         }
                     } label: {
                         Label("Edit battery", systemImage: MySymbols.edit)
+                            .macHelp("Edit battery")
                     }
                     .disabled(mdBattery == nil)
                 }

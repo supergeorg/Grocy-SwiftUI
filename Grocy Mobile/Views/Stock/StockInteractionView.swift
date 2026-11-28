@@ -74,6 +74,8 @@ private struct StockInteractionSheet: ViewModifier {
                     StockInteractionView(interaction: interaction)
                 }
                 .environment(router)
+                // The journal, the entries and the recipes are lists.
+                .listSheetSize()
                 #if os(iOS)
                     if let zoom, let sourceID = zoom.sourceID(for: interaction) {
                         sheet.navigationTransition(.zoom(sourceID: sourceID, in: zoom.namespace))

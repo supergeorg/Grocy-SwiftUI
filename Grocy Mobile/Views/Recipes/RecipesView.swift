@@ -230,19 +230,16 @@ struct RecipesView: View {
                 }
                 #if os(iOS)
                     .navigationTransition(.zoom(sourceID: ZoomTransitionID.add, in: addTransition))
+                #else
+                    .presentationSizing(.form)
                 #endif
             }
-            #if os(iOS)
-                .sheet(isPresented: $showImportRecipe) {
-                    NavigationStack {
-                        RecipeImportView()
-                    }
-                }
-            #else
-                .navigationDestination(isPresented: $showImportRecipe) {
+            .sheet(isPresented: $showImportRecipe) {
+                NavigationStack {
                     RecipeImportView()
                 }
-            #endif
+                .presentationSizing(.form)
+            }
             .task {
                 await updateData()
                 initialLoadDone = true
@@ -278,6 +275,7 @@ struct RecipesView: View {
                             },
                             label: {
                                 Label("Import recipe from website", systemImage: MySymbols.importRecipe)
+                                    .macHelp("Import recipe from website")
                             }
                         )
                     }
@@ -291,6 +289,7 @@ struct RecipesView: View {
                             },
                             label: {
                                 Label("Create recipe", systemImage: MySymbols.new)
+                                    .macHelp("Create recipe")
                             }
                         )
                     }
@@ -313,7 +312,7 @@ struct RecipesView: View {
             // A menu picker in the macOS toolbar shows an empty title; a segmented control with symbols is the Mac's usual view switcher (like Finder).
             .pickerStyle(.segmented)
             .labelStyle(.iconOnly)
-            .help("Layout")
+            .macHelp("Layout")
         #else
             .pickerStyle(.menu)
         #endif
@@ -365,6 +364,7 @@ struct RecipesView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

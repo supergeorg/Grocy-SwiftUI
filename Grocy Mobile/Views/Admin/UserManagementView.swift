@@ -84,11 +84,6 @@ struct UserManagementView: View {
 
     var content: some View {
         List {
-            if users.isEmpty {
-                ContentUnavailableView("No users found", systemImage: MySymbols.user)
-            } else if filteredUsers.isEmpty {
-                ContentUnavailableView.search
-            }
             ForEach(filteredUsers, id: \.id) { user in
                 NavigationLink(value: user) {
                     UserRowView(user: user, isCurrentUser: isCurrentUser(user))
@@ -132,6 +127,13 @@ struct UserManagementView: View {
                 }
             }
         }
+        .overlay {
+            if users.isEmpty {
+                ContentUnavailableView("No users found", systemImage: MySymbols.user)
+            } else if filteredUsers.isEmpty {
+                ContentUnavailableView.search
+            }
+        }
         .navigationTitle("User management")
         .userManagementDestinations(isEnabled: registersDestinations)
         .toolbar {
@@ -140,6 +142,7 @@ struct UserManagementView: View {
                     showAddUser = true
                 } label: {
                     Label("Create user", systemImage: MySymbols.new)
+                        .macHelp("Create user")
                 }
             }
             #if os(iOS)

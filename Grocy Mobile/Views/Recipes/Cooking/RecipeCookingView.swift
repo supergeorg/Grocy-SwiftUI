@@ -34,6 +34,10 @@ struct RecipeCookingView: View {
     @State private var isProcessing: Bool = false
     @State private var isConsumed: Bool = false
     @State private var errorMessage: String?
+    #if os(macOS)
+        /// Keeps the display awake while the cooking window is open.
+        @State private var displaySleepActivity: (any NSObjectProtocol)?
+    #endif
 
     init(recipe: Recipe, readyIngredients: Binding<Set<String>>) {
         self.recipe = recipe
@@ -123,18 +127,29 @@ struct RecipeCookingView: View {
     var body: some View {
         NavigationStack {
             pager
+                // Above the bottom bar on every page, so a timer is in view whatever the step.
+                .safeAreaBar(edge: .bottom) {
+                    CookingTimersBar(recipeID: recipe.id) { timer in
+                        if let stepNumber = timer.stepNumber, timer.recipeID == recipe.id {
+                            goToPage(stepNumber)
+                        }
+                    }
+                }
                 .navigationTitle(recipe.name)
                 #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
+                #else
+                    // The window's title is the recipe, the subtitle where in it the cook is.
+                    .navigationSubtitle(Text(pageTitle))
                 #endif
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(role: .close) {
-                            dismiss()
-                        }
-                        .keyboardShortcut(.cancelAction)
-                    }
                     #if os(iOS)
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button(role: .close) {
+                                dismiss()
+                            }
+                            .keyboardShortcut(.cancelAction)
+                        }
                         ToolbarItem(placement: .bottomBar) {
                             previousButton
                         }
@@ -148,25 +163,27 @@ struct RecipeCookingView: View {
                         ToolbarItem(placement: .bottomBar) {
                             nextButton
                         }
-                    #endif
-                }
-                #if os(macOS)
-                    .safeAreaBar(edge: .bottom) {
-                        HStack {
+                    #else
+                        // A window of its own on the Mac (closed with its close button): going back at the leading edge
+                        // like a browser's back button, the next step as the window's prominent action.
+                        ToolbarItem(placement: .navigation) {
                             previousButton
-                            Spacer()
-                            pageIndicator
-                            Spacer()
+                        }
+                        ToolbarItem(placement: .primaryAction) {
                             nextButton
                         }
-                        .padding()
-                    }
-                #endif
+                    #endif
+                }
         }
         #if os(macOS)
             .frame(minWidth: Constants.macOSCookingMinWidth, minHeight: Constants.macOSCookingMinHeight)
-        #endif
-        #if os(iOS)
+            // The display stays on while cooking, so the step is still visible with dough on the fingers.
+            .onAppear { displaySleepActivity = ProcessInfo.processInfo.beginActivity(options: .idleDisplaySleepDisabled, reason: "Cooking") }
+            .onDisappear {
+                if let displaySleepActivity { ProcessInfo.processInfo.endActivity(displaySleepActivity) }
+                displaySleepActivity = nil
+            }
+        #else
             // The screen stays on while cooking, so the step is still visible with dough on the fingers.
             .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
             .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
@@ -236,7 +253,17 @@ struct RecipeCookingView: View {
                 step: steps[index - 1],
                 number: index,
                 count: steps.count,
-                ingredients: ingredientsMentioned(in: steps[index - 1])
+                ingredients: ingredientsMentioned(in: steps[index - 1]),
+                onStartTimer: { duration in
+                    Task {
+                        await CookingTimerStore.shared.start(
+                            duration: duration.seconds,
+                            recipeID: recipe.id,
+                            recipeName: recipe.name,
+                            stepNumber: index
+                        )
+                    }
+                }
             )
         }
     }
@@ -248,6 +275,7 @@ struct RecipeCookingView: View {
             goToPage(page - 1)
         } label: {
             Label("Back", systemImage: MySymbols.previousStep)
+                .macHelp("Back")
         }
         .disabled(page == 0)
         .keyboardShortcut(.leftArrow, modifiers: [])
@@ -382,10 +410,8 @@ extension RecipeCookingView {
             ingredientGroups
             .flatMap(\.ingredients)
             .filter { ingredient in
-                let name = ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !name.isEmpty else { return false }
-                let pattern = "(?<![\\p{L}\\p{N}])" + NSRegularExpression.escapedPattern(for: name)
-                return text.range(of: pattern, options: [.regularExpression, .caseInsensitive, .diacriticInsensitive]) != nil
+                guard let pattern = ingredient.mentionPattern else { return false }
+                return text.range(of: pattern, options: CookingIngredient.mentionOptions) != nil
             }
     }
 
@@ -449,6 +475,16 @@ struct CookingIngredient: Identifiable, Hashable {
     var name: String
     var amountText: String
     var note: String
+
+    static let mentionOptions: String.CompareOptions = [.regularExpression, .caseInsensitive, .diacriticInsensitive]
+
+    /// Finds the name at the start of a word, with a short ending of the word ("eggs" for "egg", "Eier" for "Ei"),
+    /// but only the name in a longer word ("Zucker" in "Zuckerrübensirup").
+    var mentionPattern: String? {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return nil }
+        return "(?<![\\p{L}\\p{N}])" + NSRegularExpression.escapedPattern(for: name) + "(?:\\p{L}{0,3}(?![\\p{L}\\p{N}]))?"
+    }
 }
 
 private struct MiseEnPlaceIngredientLabel: View {
