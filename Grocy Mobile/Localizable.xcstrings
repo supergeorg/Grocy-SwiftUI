@@ -280,6 +280,9 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@%@" : {
+      "shouldTranslate" : false
+    },
     "%@\n\n%@" : {
       "localizations" : {
         "en" : {

@@ -82,6 +82,8 @@ enum Sizes {
     static let priceHistoryChartHeight: CGFloat = 200
     /// Widest line length of the cooking mode's pages, so long steps stay readable on iPad and Mac.
     static let cookingReadableWidth: CGFloat = 720
+    /// Corner radius of the highlight behind an ingredient name in a cooking step.
+    static let ingredientMarkCornerRadius: CGFloat = 6
     /// Widest line length of the onboarding, login start and What's New screens, so the feature list stays compact on iPad and Mac.
     static let introductionReadableWidth: CGFloat = 520
     /// Width of the symbol column in an introduction feature row (scaled with Dynamic Type).

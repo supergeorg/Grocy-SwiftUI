@@ -392,10 +392,8 @@ extension RecipeCookingView {
             ingredientGroups
             .flatMap(\.ingredients)
             .filter { ingredient in
-                let name = ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !name.isEmpty else { return false }
-                let pattern = "(?<![\\p{L}\\p{N}])" + NSRegularExpression.escapedPattern(for: name)
-                return text.range(of: pattern, options: [.regularExpression, .caseInsensitive, .diacriticInsensitive]) != nil
+                guard let pattern = ingredient.mentionPattern else { return false }
+                return text.range(of: pattern, options: CookingIngredient.mentionOptions) != nil
             }
     }
 
@@ -459,6 +457,16 @@ struct CookingIngredient: Identifiable, Hashable {
     var name: String
     var amountText: String
     var note: String
+
+    static let mentionOptions: String.CompareOptions = [.regularExpression, .caseInsensitive, .diacriticInsensitive]
+
+    /// Finds the name at the start of a word, with a short ending of the word ("eggs" for "egg", "Eier" for "Ei"),
+    /// but only the name in a longer word ("Zucker" in "Zuckerrübensirup").
+    var mentionPattern: String? {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return nil }
+        return "(?<![\\p{L}\\p{N}])" + NSRegularExpression.escapedPattern(for: name) + "(?:\\p{L}{0,3}(?![\\p{L}\\p{N}]))?"
+    }
 }
 
 private struct MiseEnPlaceIngredientLabel: View {

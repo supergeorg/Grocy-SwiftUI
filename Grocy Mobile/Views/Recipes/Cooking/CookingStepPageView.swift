@@ -41,10 +41,7 @@ struct CookingStepPageView: View {
                 .accessibilityAddTraits(.isHeader)
 
                 ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
-                    Text(paragraph)
-                        .font(.title2)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .textSelection(.enabled)
+                    CookingStepParagraphView(paragraph: paragraph, ingredients: ingredients)
                 }
 
                 if !ingredients.isEmpty {
@@ -76,10 +73,13 @@ struct CookingStepPageView: View {
         step: RecipePreparationStep(
             section: "Sauce",
             title: "Onions",
-            text: "Finely chop the onions and fry them in a little oil until golden.\nThen add the garlic."
+            text: "Finely chop the onions and fry them in a little oil until golden.\nThen add the garlic and the chopped onion."
         ),
         number: 1,
         count: 3,
-        ingredients: [CookingIngredient(id: "1", name: "Onions", amountText: "2 pieces", note: "")]
+        ingredients: [
+            CookingIngredient(id: "1", name: "Onion", amountText: "2 pieces", note: "red"),
+            CookingIngredient(id: "2", name: "Garlic", amountText: "1 clove", note: ""),
+        ]
     )
 }
