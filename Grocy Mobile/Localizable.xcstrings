@@ -7,246 +7,6 @@
     ":" : {
       "shouldTranslate" : false
     },
-    "Align left" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linksbündig"
-          }
-        }
-      }
-    },
-    "Align right" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechtsbündig"
-          }
-        }
-      }
-    },
-    "Bold" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fett"
-          }
-        }
-      }
-    },
-    "Bulleted list" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufzählung"
-          }
-        }
-      }
-    },
-    "Center" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zentriert"
-          }
-        }
-      }
-    },
-    "Clear formatting" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formatierung entfernen"
-          }
-        }
-      }
-    },
-    "Cooking" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kochen"
-          }
-        }
-      }
-    },
-    "Decrease indent" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einzug verkleinern"
-          }
-        }
-      }
-    },
-    "Hide keyboard" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastatur ausblenden"
-          }
-        }
-      }
-    },
-    "Increase indent" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einzug vergrößern"
-          }
-        }
-      }
-    },
-    "Insert link" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Link einfügen"
-          }
-        }
-      }
-    },
-    "Italic" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kursiv"
-          }
-        }
-      }
-    },
-    "Justify" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blocksatz"
-          }
-        }
-      }
-    },
-    "Larger text" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Größere Schrift"
-          }
-        }
-      }
-    },
-    "Numbered list" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nummerierte Liste"
-          }
-        }
-      }
-    },
-    "Recipe not found" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rezept nicht gefunden"
-          }
-        }
-      }
-    },
-    "Redo" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wiederholen"
-          }
-        }
-      }
-    },
-    "Reset text size" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schriftgröße zurücksetzen"
-          }
-        }
-      }
-    },
-    "Resets the text size to 100 %." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Setzt die Schriftgröße auf 100 % zurück."
-          }
-        }
-      }
-    },
-    "Scan due date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MHD scannen"
-          }
-        }
-      }
-    },
-    "Smaller text" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kleinere Schrift"
-          }
-        }
-      }
-    },
-    "Stock actions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestandsaktionen"
-          }
-        }
-      }
-    },
-    "Strikethrough" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Durchgestrichen"
-          }
-        }
-      }
-    },
-    "Underline" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unterstrichen"
-          }
-        }
-      }
-    },
     "“%@” from the website was matched to the similar unit “%@”." : {
       "localizations" : {
         "de" : {
@@ -278,9 +38,6 @@
 
     },
     "%@" : {
-      "shouldTranslate" : false
-    },
-    "%@%@" : {
       "shouldTranslate" : false
     },
     "%@\n\n%@" : {
@@ -915,6 +672,9 @@
           }
         }
       }
+    },
+    "%@%@" : {
+      "shouldTranslate" : false
     },
     "%@s" : {
       "shouldTranslate" : false
@@ -8748,6 +8508,7 @@
 
     },
     "About" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11459,6 +11220,26 @@
     },
     "Adds this place as a tab" : {
 
+    },
+    "Align left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linksbündig"
+          }
+        }
+      }
+    },
+    "Align right" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechtsbündig"
+          }
+        }
+      }
     },
     "All" : {
       "localizations" : {
@@ -18371,12 +18152,32 @@
         }
       }
     },
+    "Bold" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fett"
+          }
+        }
+      }
+    },
     "Bread" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brot"
+          }
+        }
+      }
+    },
+    "Bulleted list" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufzählung"
           }
         }
       }
@@ -19655,6 +19456,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "分類"
+          }
+        }
+      }
+    },
+    "Center" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zentriert"
           }
         }
       }
@@ -21664,6 +21475,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除過濾條件"
+          }
+        }
+      }
+    },
+    "Clear formatting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierung entfernen"
           }
         }
       }
@@ -23794,6 +23615,16 @@
     },
     "Cook from your recipes" : {
 
+    },
+    "Cooking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochen"
+          }
+        }
+      }
     },
     "Cooking mode" : {
       "localizations" : {
@@ -29392,6 +29223,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tillåtet antal decimaler för priser (inmatning)"
+          }
+        }
+      }
+    },
+    "Decrease indent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzug verkleinern"
           }
         }
       }
@@ -43083,6 +42924,16 @@
         }
       }
     },
+    "Hide keyboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastatur ausblenden"
+          }
+        }
+      }
+    },
     "History" : {
       "localizations" : {
         "de" : {
@@ -44255,6 +44106,16 @@
         }
       }
     },
+    "Increase indent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzug vergrößern"
+          }
+        }
+      }
+    },
     "Industrial codes" : {
       "shouldTranslate" : false
     },
@@ -44673,6 +44534,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insertar"
+          }
+        }
+      }
+    },
+    "Insert link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link einfügen"
           }
         }
       }
@@ -45451,12 +45322,32 @@
         }
       }
     },
+    "Italic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursiv"
+          }
+        }
+      }
+    },
     "Item %lld of %lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eintrag %lld von %lld"
+          }
+        }
+      }
+    },
+    "Justify" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocksatz"
           }
         }
       }
@@ -45611,6 +45502,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "單位標籤"
+          }
+        }
+      }
+    },
+    "Larger text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größere Schrift"
           }
         }
       }
@@ -56827,6 +56728,16 @@
         }
       }
     },
+    "Numbered list" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nummerierte Liste"
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "ca" : {
@@ -58979,6 +58890,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pega la URL de la receta"
+          }
+        }
+      }
+    },
+    "Pause" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausieren"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausiert"
           }
         }
       }
@@ -65335,6 +65266,16 @@
         }
       }
     },
+    "Recipe not found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept nicht gefunden"
+          }
+        }
+      }
+    },
     "Recipe parsing" : {
       "localizations" : {
         "de" : {
@@ -65545,6 +65486,16 @@
         }
       }
     },
+    "Redo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen"
+          }
+        }
+      }
+    },
     "Release date" : {
       "localizations" : {
         "de" : {
@@ -65669,6 +65620,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eintrag entfernen"
+          }
+        }
+      }
+    },
+    "Remove timer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer entfernen"
           }
         }
       }
@@ -65966,6 +65927,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重置缓存"
+          }
+        }
+      }
+    },
+    "Reset text size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftgröße zurücksetzen"
+          }
+        }
+      }
+    },
+    "Resets the text size to 100 %." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setzt die Schriftgröße auf 100 % zurück."
           }
         }
       }
@@ -66854,6 +66835,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Barcode scannen"
+          }
+        }
+      }
+    },
+    "Scan due date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MHD scannen"
           }
         }
       }
@@ -70763,6 +70754,16 @@
         }
       }
     },
+    "Shows the step" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt den Schritt"
+          }
+        }
+      }
+    },
     "Shows which chores are overdue, due today and due soon." : {
       "localizations" : {
         "de" : {
@@ -71433,6 +71434,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已跳過"
+          }
+        }
+      }
+    },
+    "Smaller text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleinere Schrift"
           }
         }
       }
@@ -72178,6 +72189,26 @@
     "start" : {
 
     },
+    "Start a timer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer starten"
+          }
+        }
+      }
+    },
+    "Start a timer for %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer für %@ starten"
+          }
+        }
+      }
+    },
     "Start cooking" : {
       "localizations" : {
         "de" : {
@@ -72536,6 +72567,16 @@
         }
       }
     },
+    "Step %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schritt %lld"
+          }
+        }
+      }
+    },
     "Step %lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -72573,6 +72614,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voorraad"
+          }
+        }
+      }
+    },
+    "Stock actions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandsaktionen"
           }
         }
       }
@@ -74606,6 +74657,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "店家"
+          }
+        }
+      }
+    },
+    "Strikethrough" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchgestrichen"
           }
         }
       }
@@ -84207,6 +84268,26 @@
     "Time of day" : {
 
     },
+    "Timer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer"
+          }
+        }
+      }
+    },
+    "Timer done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer abgelaufen"
+          }
+        }
+      }
+    },
     "Title" : {
       "localizations" : {
         "ca" : {
@@ -87869,6 +87950,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消勾選不加入購物清單的食材"
+          }
+        }
+      }
+    },
+    "Underline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterstrichen"
           }
         }
       }

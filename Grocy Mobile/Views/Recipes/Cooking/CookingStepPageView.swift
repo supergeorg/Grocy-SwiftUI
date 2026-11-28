@@ -15,9 +15,26 @@ struct CookingStepPageView: View {
     var number: Int
     var count: Int
     var ingredients: [CookingIngredient] = []
+    /// Starts a timer for a time the step mentions.
+    var onStartTimer: (CookingDuration) -> Void = { _ in }
+
+    @Environment(\.locale) private var locale
 
     private var paragraphs: [String] {
         step.text.components(separatedBy: "\n").filter { !$0.isEmpty }
+    }
+
+    /// The times the step mentions, each once.
+    private var durations: [CookingDuration] {
+        var seen: Set<TimeInterval> = []
+        return CookingDurationParser.durations(in: step.text).filter { seen.insert($0.seconds).inserted }
+    }
+
+    private func durationText(_ duration: CookingDuration) -> String {
+        let format = Duration.UnitsFormatStyle(allowedUnits: [.hours, .minutes, .seconds], width: .abbreviated).locale(locale)
+        let lower = Duration.seconds(duration.seconds).formatted(format)
+        guard let upperSeconds = duration.upperSeconds else { return lower }
+        return "\(lower) – \(Duration.seconds(upperSeconds).formatted(format))"
     }
 
     var body: some View {
@@ -41,7 +58,25 @@ struct CookingStepPageView: View {
                 .accessibilityAddTraits(.isHeader)
 
                 ForEach(Array(paragraphs.enumerated()), id: \.offset) { _, paragraph in
-                    CookingStepParagraphView(paragraph: paragraph, ingredients: ingredients)
+                    CookingStepParagraphView(paragraph: paragraph, ingredients: ingredients, onStartTimer: onStartTimer)
+                }
+
+                if !durations.isEmpty {
+                    FlowLayout(spacing: Spacing.small) {
+                        ForEach(durations, id: \.self) { duration in
+                            Button {
+                                onStartTimer(duration)
+                            } label: {
+                                Label(durationText(duration), systemImage: MySymbols.timer)
+                                    .font(.headline)
+                            }
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.capsule)
+                            .controlSize(.large)
+                            .accessibilityLabel(Text("Start a timer for \(durationText(duration))"))
+                            .macHelp(Text("Start a timer for \(durationText(duration))"))
+                        }
+                    }
                 }
 
                 if !ingredients.isEmpty {
@@ -73,7 +108,8 @@ struct CookingStepPageView: View {
         step: RecipePreparationStep(
             section: "Sauce",
             title: "Onions",
-            text: "Finely chop the onions and fry them in a little oil until golden.\nThen add the garlic and the chopped onion."
+            text:
+                "Finely chop the onions and fry them in a little oil for 5 to 7 minutes until golden.\nThen add the garlic and the chopped onion and cook for 1 hour 30 minutes."
         ),
         number: 1,
         count: 3,

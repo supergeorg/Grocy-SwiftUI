@@ -84,6 +84,11 @@ enum Sizes {
     static let cookingReadableWidth: CGFloat = 720
     /// Corner radius of the highlight behind an ingredient name in a cooking step.
     static let ingredientMarkCornerRadius: CGFloat = 6
+    /// Diameter and line width of a cooking timer's progress ring.
+    static let cookingTimerRing: CGFloat = 32
+    static let cookingTimerRingLineWidth: CGFloat = 4
+    /// Widest the time of a cooking timer gets in the compact Dynamic Island.
+    static let cookingTimerCompactWidth: CGFloat = 56
     /// Widest line length of the onboarding, login start and What's New screens, so the feature list stays compact on iPad and Mac.
     static let introductionReadableWidth: CGFloat = 520
     /// Width of the symbol column in an introduction feature row (scaled with Dynamic Type).

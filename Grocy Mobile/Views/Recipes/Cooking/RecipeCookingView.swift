@@ -127,6 +127,14 @@ struct RecipeCookingView: View {
     var body: some View {
         NavigationStack {
             pager
+                // Above the bottom bar on every page, so a timer is in view whatever the step.
+                .safeAreaBar(edge: .bottom) {
+                    CookingTimersBar(recipeID: recipe.id) { timer in
+                        if let stepNumber = timer.stepNumber, timer.recipeID == recipe.id {
+                            goToPage(stepNumber)
+                        }
+                    }
+                }
                 .navigationTitle(recipe.name)
                 #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
@@ -245,7 +253,17 @@ struct RecipeCookingView: View {
                 step: steps[index - 1],
                 number: index,
                 count: steps.count,
-                ingredients: ingredientsMentioned(in: steps[index - 1])
+                ingredients: ingredientsMentioned(in: steps[index - 1]),
+                onStartTimer: { duration in
+                    Task {
+                        await CookingTimerStore.shared.start(
+                            duration: duration.seconds,
+                            recipeID: recipe.id,
+                            recipeName: recipe.name,
+                            stepNumber: index
+                        )
+                    }
+                }
             )
         }
     }

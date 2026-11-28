@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-/// A paragraph of a cooking step, with the ingredients it mentions marked.
-/// Hovering over an ingredient (Mac) or tapping it shows its amount.
+/// A paragraph of a cooking step, with the ingredients and times it mentions marked.
+/// Hovering over an ingredient (Mac) or tapping it shows its amount; tapping a time starts a timer.
 struct CookingStepParagraphView: View {
     var paragraph: String
     var ingredients: [CookingIngredient] = []
+    /// Starts a timer for a time in the text; without it, times aren't marked.
+    var onStartTimer: ((CookingDuration) -> Void)?
 
     @State private var shownMarkID: String?
 
@@ -45,7 +47,10 @@ struct CookingStepParagraphView: View {
     // MARK: Text
 
     private var segments: [Segment] {
-        var found: [(range: Range<String.Index>, ingredient: CookingIngredient)] = []
+        var found: [(range: Range<String.Index>, kind: MarkKind)] = []
+        if onStartTimer != nil {
+            found = CookingDurationParser.durations(in: paragraph).map { ($0.range, .duration($0)) }
+        }
         // Longer names first, so "red onion" wins over "onion".
         for ingredient in ingredients.sorted(by: { $0.name.count > $1.name.count }) {
             guard let pattern = ingredient.mentionPattern else { continue }
@@ -55,7 +60,7 @@ struct CookingStepParagraphView: View {
                 !range.isEmpty
             {
                 if !found.contains(where: { $0.range.overlaps(range) }) {
-                    found.append((range, ingredient))
+                    found.append((range, .ingredient(ingredient)))
                 }
                 searchStart = range.upperBound
             }
@@ -71,7 +76,7 @@ struct CookingStepParagraphView: View {
             result.append(
                 Segment(
                     text: String(paragraph[match.range]),
-                    mark: IngredientMarkAttribute(id: "\(index)-\(match.ingredient.id)", ingredient: match.ingredient)
+                    mark: CookingMarkAttribute(id: "\(index)", kind: match.kind)
                 )
             )
             position = match.range.upperBound
@@ -86,10 +91,13 @@ struct CookingStepParagraphView: View {
         segments.reduce(Text(verbatim: "")) { text, segment in
             let part: Text
             if let mark = segment.mark {
-                part = Text(verbatim: segment.text)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.tint)
-                    .customAttribute(mark)
+                let name = Text(verbatim: segment.text)
+                switch mark.kind {
+                case .ingredient:
+                    part = name.fontWeight(.semibold).foregroundStyle(.tint).customAttribute(mark)
+                case .duration:
+                    part = Text("\(Image(systemName: MySymbols.timer)) \(name)").fontWeight(.semibold).foregroundStyle(.tint).customAttribute(mark)
+                }
             } else {
                 part = Text(verbatim: segment.text)
             }
@@ -104,21 +112,53 @@ struct CookingStepParagraphView: View {
         for anchoredLayout in layouts {
             let origin = proxy[anchoredLayout.origin]
             for line in anchoredLayout.layout {
+                // A mark can have several runs on one line (the timer symbol and its text): one frame for them.
+                var lineFrames: [MarkFrame] = []
                 for run in line {
-                    guard let mark = run[IngredientMarkAttribute.self] else { continue }
+                    guard let mark = run[CookingMarkAttribute.self] else { continue }
                     let bounds = run.typographicBounds.rect
                         .offsetBy(dx: origin.x, dy: origin.y)
                         .insetBy(dx: -Spacing.hairline, dy: -Spacing.hairline)
+                    if let index = lineFrames.firstIndex(where: { $0.mark.id == mark.id }) {
+                        lineFrames[index].rect = lineFrames[index].rect.union(bounds)
+                        continue
+                    }
                     // A name broken over two lines has a run on each line.
-                    let id = frames.contains(where: { $0.mark.id == mark.id }) ? "\(mark.id)-\(frames.count)" : mark.id
-                    frames.append(MarkFrame(id: id, mark: mark, rect: bounds))
+                    let count = frames.count + lineFrames.count
+                    let id = frames.contains(where: { $0.mark.id == mark.id }) ? "\(mark.id)-\(count)" : mark.id
+                    lineFrames.append(MarkFrame(id: id, mark: mark, rect: bounds))
                 }
+                frames.append(contentsOf: lineFrames)
             }
         }
         return frames
     }
 
+    @ViewBuilder
     private func markTarget(_ frame: MarkFrame) -> some View {
+        switch frame.mark.kind {
+        case .ingredient(let ingredient):
+            ingredientTarget(frame, ingredient: ingredient)
+        case .duration(let duration):
+            durationTarget(frame, duration: duration)
+        }
+    }
+
+    private func durationTarget(_ frame: MarkFrame, duration: CookingDuration) -> some View {
+        Color.clear
+            .contentShape(.rect(cornerRadius: Sizes.ingredientMarkCornerRadius))
+            .frame(width: frame.rect.width, height: frame.rect.height)
+            #if os(macOS)
+                .pointerStyle(.link)
+            #endif
+            .onTapGesture {
+                onStartTimer?(duration)
+            }
+            .macHelp("Start a timer")
+            .position(x: frame.rect.midX, y: frame.rect.midY)
+    }
+
+    private func ingredientTarget(_ frame: MarkFrame, ingredient: CookingIngredient) -> some View {
         Color.clear
             .contentShape(.rect(cornerRadius: Sizes.ingredientMarkCornerRadius))
             .frame(width: frame.rect.width, height: frame.rect.height)
@@ -144,7 +184,7 @@ struct CookingStepParagraphView: View {
                 ),
                 arrowEdge: .bottom
             ) {
-                IngredientAmountPopover(ingredient: frame.mark.ingredient)
+                IngredientAmountPopover(ingredient: ingredient)
                     .presentationCompactAdaptation(.popover)
             }
             // After the popover, so it points at the name and not at the paragraph.
@@ -156,18 +196,23 @@ struct CookingStepParagraphView: View {
 
 private struct Segment {
     var text: String
-    var mark: IngredientMarkAttribute?
+    var mark: CookingMarkAttribute?
 }
 
-/// Marks an ingredient's name in the text, so its frame can be found in the text layout.
-private struct IngredientMarkAttribute: TextAttribute {
+private enum MarkKind: Hashable {
+    case ingredient(CookingIngredient)
+    case duration(CookingDuration)
+}
+
+/// Marks an ingredient's name or a time in the text, so its frame can be found in the text layout.
+private struct CookingMarkAttribute: TextAttribute {
     var id: String
-    var ingredient: CookingIngredient
+    var kind: MarkKind
 }
 
 private struct MarkFrame: Identifiable {
     var id: String
-    var mark: IngredientMarkAttribute
+    var mark: CookingMarkAttribute
     var rect: CGRect
 }
 
@@ -193,11 +238,12 @@ private struct IngredientAmountPopover: View {
 
 #Preview {
     CookingStepParagraphView(
-        paragraph: "Finely chop the onions and fry them in a little oil. Add the garlic and the rest of the onion.",
+        paragraph: "Finely chop the onions and fry them in a little oil for 5 minutes. Add the garlic and the rest of the onion.",
         ingredients: [
             CookingIngredient(id: "1", name: "Onion", amountText: "2 pieces", note: "red"),
             CookingIngredient(id: "2", name: "Garlic", amountText: "1 clove", note: ""),
-        ]
+        ],
+        onStartTimer: { _ in }
     )
     .padding()
 }
