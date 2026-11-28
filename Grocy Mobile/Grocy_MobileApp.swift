@@ -391,6 +391,15 @@ struct Grocy_MobileApp: App {
             .defaultSize(width: Sizes.macOSAuxiliaryWindowWidth, height: Sizes.macOSAuxiliaryWindowHeight)
             .windowResizability(.contentMinSize)
             .commandsRemoved()
+
+            // Cooking runs next to the recipe and the stock, so it's a window of its own, one per recipe.
+            // Only opened from a recipe, so not in the File menu.
+            WindowGroup("Cooking", id: AppWindow.cooking, for: Int.self) { $recipeID in
+                withAppEnvironment(RecipeCookingWindow(recipeID: recipeID))
+            }
+            .defaultSize(width: Constants.macOSCookingWidth, height: Constants.macOSCookingHeight)
+            .windowResizability(.contentMinSize)
+            .commandsRemoved()
         #endif
     }
 

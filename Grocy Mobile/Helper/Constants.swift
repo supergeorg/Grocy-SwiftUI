@@ -14,9 +14,11 @@ struct Constants {
         static let macOSStockEntriesMinWidth: CGFloat = 350.0
         /// Number fields next to a stepper; macOS text fields would otherwise take the whole row.
         static let macOSAmountFieldWidth: CGFloat = 90.0
-        /// The cooking mode's sheet, large enough to read a step from a distance.
+        /// The cooking mode's window, large enough to read a step from a distance.
         static let macOSCookingMinWidth: CGFloat = 640.0
         static let macOSCookingMinHeight: CGFloat = 560.0
+        static let macOSCookingWidth: CGFloat = 820.0
+        static let macOSCookingHeight: CGFloat = 680.0
         /// Onboarding, login start and What's New, so the feature list and its buttons fit without scrolling.
         static let macOSIntroductionMinHeight: CGFloat = 620.0
     #endif

@@ -30,9 +30,15 @@ struct RecipeView: View {
     @State private var showConsumeAllNeeded: Bool = false
     @State private var showAddToShLSelection: Bool = false
     @State private var showCooking: Bool = false
-    /// The ingredients ticked off, by `RecipePosResolvedElement.miseEnPlaceID`. Shared with the cooking mode's mise en place.
-    /// Like in Grocy, the state isn't saved.
-    @State private var readyIngredients: Set<String> = []
+    #if os(macOS)
+        @Environment(\.openWindow) private var openWindow
+    #endif
+    /// The ingredients ticked off, shared with the cooking mode's mise en place (also in its own window on the Mac).
+    @State private var miseEnPlace = MiseEnPlaceStore.shared
+    private var readyIngredients: Set<String> {
+        get { miseEnPlace[recipe.id] }
+        nonmutating set { miseEnPlace[recipe.id] = newValue }
+    }
 
     @State private var addToShLItems: [AddMissingToShLItem] = []
 
@@ -292,7 +298,11 @@ struct RecipeView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        showCooking = true
+                        #if os(macOS)
+                            openWindow(id: AppWindow.cooking, value: recipe.id)
+                        #else
+                            showCooking = true
+                        #endif
                     } label: {
                         Label("Start cooking", systemImage: MySymbols.cooking)
                             .macHelp("Start cooking")
@@ -336,11 +346,7 @@ struct RecipeView: View {
             )
             #if os(iOS)
                 .fullScreenCover(isPresented: $showCooking) {
-                    RecipeCookingView(recipe: recipe, readyIngredients: $readyIngredients)
-                }
-            #else
-                .sheet(isPresented: $showCooking) {
-                    RecipeCookingView(recipe: recipe, readyIngredients: $readyIngredients)
+                    RecipeCookingView(recipe: recipe, readyIngredients: miseEnPlace.binding(for: recipe.id))
                 }
             #endif
             .sheet(isPresented: $showAddToShLSelection) {

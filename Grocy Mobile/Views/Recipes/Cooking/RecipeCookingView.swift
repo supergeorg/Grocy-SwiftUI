@@ -34,6 +34,10 @@ struct RecipeCookingView: View {
     @State private var isProcessing: Bool = false
     @State private var isConsumed: Bool = false
     @State private var errorMessage: String?
+    #if os(macOS)
+        /// Keeps the display awake while the cooking window is open.
+        @State private var displaySleepActivity: (any NSObjectProtocol)?
+    #endif
 
     init(recipe: Recipe, readyIngredients: Binding<Set<String>>) {
         self.recipe = recipe
@@ -126,15 +130,18 @@ struct RecipeCookingView: View {
                 .navigationTitle(recipe.name)
                 #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
+                #else
+                    // The window's title is the recipe, the subtitle where in it the cook is.
+                    .navigationSubtitle(Text(pageTitle))
                 #endif
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(role: .close) {
-                            dismiss()
-                        }
-                        .keyboardShortcut(.cancelAction)
-                    }
                     #if os(iOS)
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button(role: .close) {
+                                dismiss()
+                            }
+                            .keyboardShortcut(.cancelAction)
+                        }
                         ToolbarItem(placement: .bottomBar) {
                             previousButton
                         }
@@ -148,25 +155,27 @@ struct RecipeCookingView: View {
                         ToolbarItem(placement: .bottomBar) {
                             nextButton
                         }
-                    #endif
-                }
-                #if os(macOS)
-                    .safeAreaBar(edge: .bottom) {
-                        HStack {
+                    #else
+                        // A window of its own on the Mac (closed with its close button): going back at the leading edge
+                        // like a browser's back button, the next step as the window's prominent action.
+                        ToolbarItem(placement: .navigation) {
                             previousButton
-                            Spacer()
-                            pageIndicator
-                            Spacer()
+                        }
+                        ToolbarItem(placement: .primaryAction) {
                             nextButton
                         }
-                        .padding()
-                    }
-                #endif
+                    #endif
+                }
         }
         #if os(macOS)
             .frame(minWidth: Constants.macOSCookingMinWidth, minHeight: Constants.macOSCookingMinHeight)
-        #endif
-        #if os(iOS)
+            // The display stays on while cooking, so the step is still visible with dough on the fingers.
+            .onAppear { displaySleepActivity = ProcessInfo.processInfo.beginActivity(options: .idleDisplaySleepDisabled, reason: "Cooking") }
+            .onDisappear {
+                if let displaySleepActivity { ProcessInfo.processInfo.endActivity(displaySleepActivity) }
+                displaySleepActivity = nil
+            }
+        #else
             // The screen stays on while cooking, so the step is still visible with dough on the fingers.
             .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
             .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }

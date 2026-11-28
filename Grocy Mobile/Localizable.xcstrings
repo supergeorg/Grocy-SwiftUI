@@ -67,6 +67,16 @@
         }
       }
     },
+    "Cooking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochen"
+          }
+        }
+      }
+    },
     "Decrease indent" : {
       "localizations" : {
         "de" : {
@@ -143,6 +153,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nummerierte Liste"
+          }
+        }
+      }
+    },
+    "Recipe not found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept nicht gefunden"
           }
         }
       }
