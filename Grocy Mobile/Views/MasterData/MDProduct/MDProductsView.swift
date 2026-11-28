@@ -217,6 +217,7 @@ struct MDProductsView: View {
                         },
                         label: {
                             Label("Create product", systemImage: MySymbols.new)
+                                .macHelp("Create product")
                         }
                     )
                 }

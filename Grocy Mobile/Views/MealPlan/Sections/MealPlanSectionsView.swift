@@ -152,6 +152,7 @@ struct MealPlanSectionsView: View {
                             },
                             label: {
                                 Label("Create meal plan section", systemImage: MySymbols.new)
+                                    .macHelp("Create meal plan section")
                             }
                         )
                     }

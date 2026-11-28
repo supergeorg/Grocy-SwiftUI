@@ -132,6 +132,8 @@ struct MDBarcodesView: View {
                             Image(systemName: MySymbols.new)
                         }
                     )
+                    .accessibilityLabel(Text("Add barcode"))
+                    .macHelp("Add barcode")
                 }
             )
         })

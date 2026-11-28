@@ -248,6 +248,7 @@ struct RecipeCookingView: View {
             goToPage(page - 1)
         } label: {
             Label("Back", systemImage: MySymbols.previousStep)
+                .macHelp("Back")
         }
         .disabled(page == 0)
         .keyboardShortcut(.leftArrow, modifiers: [])

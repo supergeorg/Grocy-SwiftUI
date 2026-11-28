@@ -249,6 +249,7 @@ struct ChoreLogView: View {
                 sortGroupMenu
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
             }
             #if os(iOS)
@@ -366,6 +367,7 @@ struct ChoreLogView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

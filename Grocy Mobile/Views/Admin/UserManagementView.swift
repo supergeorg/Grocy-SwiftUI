@@ -142,6 +142,7 @@ struct UserManagementView: View {
                     showAddUser = true
                 } label: {
                     Label("Create user", systemImage: MySymbols.new)
+                        .macHelp("Create user")
                 }
             }
             #if os(iOS)

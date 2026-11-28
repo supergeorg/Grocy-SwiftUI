@@ -155,6 +155,7 @@ struct DueView: View {
                 } label: {
                     // Not the filter symbol: this chooses which kinds the agenda shows at all, the capsules filter them.
                     Label("Show", systemImage: MySymbols.show)
+                        .macHelp("Show")
                 }
             }
         }
@@ -351,7 +352,8 @@ struct DueView: View {
                 Label("OK", systemImage: doneIcon(for: item))
             }
             .tint(.green)
-            .accessibilityHint(Text(doneTitle(for: item)))
+            // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+            .accessibilityLabel(Text(doneTitle(for: item)))
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             if case .chore(let chore) = item.source {
@@ -361,7 +363,8 @@ struct DueView: View {
                     Label("Skip", systemImage: MySymbols.choreSkipNext)
                 }
                 .tint(.gray)
-                .accessibilityHint("Skip next chore schedule")
+                // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                .accessibilityLabel("Skip next chore schedule")
             }
         }
         .contextMenu {

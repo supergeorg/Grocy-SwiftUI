@@ -181,6 +181,7 @@ struct ChoreTrackingView: View {
                         // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Skip next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreSkipNext)
+                            .macHelp("Skip next chore schedule")
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                     }
                 )
@@ -203,6 +204,7 @@ struct ChoreTrackingView: View {
                         // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Track next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreTrackNext)
+                            .macHelp("Track next chore schedule")
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                     }
                 )

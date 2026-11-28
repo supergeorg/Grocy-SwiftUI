@@ -158,6 +158,7 @@ struct MDProductGroupsView: View {
                     },
                     label: {
                         Label("Create product group", systemImage: MySymbols.new)
+                            .macHelp("Create product group")
                     }
                 )
             }

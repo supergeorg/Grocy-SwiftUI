@@ -147,6 +147,7 @@ struct MDQuantityUnitsView: View {
                     },
                     label: {
                         Label("Create quantity unit", systemImage: MySymbols.new)
+                            .macHelp("Create quantity unit")
                     }
                 )
             }

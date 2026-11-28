@@ -578,6 +578,7 @@ struct MealPlanView: View {
                 },
                 label: {
                     Label("Add to meal plan", systemImage: MySymbols.new)
+                        .macHelp("Add to meal plan")
                 }
             )
             .keyboardShortcut("n", modifiers: .command)
@@ -598,6 +599,7 @@ struct MealPlanView: View {
                     moreActions(lookup: lookup)
                 } label: {
                     Label("More", systemImage: MySymbols.moreActions)
+                        .macHelp("More")
                 }
             }
         #else

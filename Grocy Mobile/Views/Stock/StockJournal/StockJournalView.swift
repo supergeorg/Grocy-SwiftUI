@@ -273,6 +273,7 @@ struct StockJournalView: View {
                 sortGroupMenu
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
             }
@@ -406,6 +407,7 @@ struct StockJournalView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

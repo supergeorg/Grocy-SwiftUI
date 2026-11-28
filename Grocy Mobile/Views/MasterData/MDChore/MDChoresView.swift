@@ -180,6 +180,7 @@ struct MDChoresView: View {
                         },
                         label: {
                             Label("Create chore", systemImage: MySymbols.new)
+                                .macHelp("Create chore")
                         }
                     )
                 }

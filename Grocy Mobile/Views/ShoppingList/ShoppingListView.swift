@@ -494,6 +494,7 @@ struct ShoppingListView: View {
                 content: {
                     Button(action: { showFilterSheet = true }) {
                         Label("Filter", systemImage: MySymbols.filter)
+                            .macHelp("Filter")
                     }
                     .badge(numFilters)
                     sortGroupMenu
@@ -516,7 +517,7 @@ struct ShoppingListView: View {
                             shoppingListInteractionRouter.present(.newShoppingListEntry)
                         }
                     )
-                    .help("Add item")
+                    .macHelp("Add item")
                 }
             )
             #if os(iOS)
@@ -717,7 +718,7 @@ struct ShoppingListView: View {
                         }
                     }
                 )
-                .help("Shopping list")
+                .macHelp("Shopping list")
                 Divider()
                 Button(
                     action: {
@@ -727,7 +728,7 @@ struct ShoppingListView: View {
                         Label("New shopping list", systemImage: MySymbols.new)
                     }
                 )
-                .help("New shopping list")
+                .macHelp("New shopping list")
             }
             NavigationLink(
                 value: selectedShoppingList,
@@ -735,7 +736,7 @@ struct ShoppingListView: View {
                     Label("Edit shopping list", systemImage: MySymbols.edit)
                 }
             )
-            .help("Edit shopping list")
+            .macHelp("Edit shopping list")
             if features.multipleShoppingLists {
                 Button(
                     role: .destructive,
@@ -748,7 +749,7 @@ struct ShoppingListView: View {
                         Label("Delete shopping list", systemImage: MySymbols.delete)
                     }
                 )
-                .help("Delete shopping list")
+                .macHelp("Delete shopping list")
             }
         }
     }
@@ -766,7 +767,7 @@ struct ShoppingListView: View {
                     Label("Clear list", systemImage: MySymbols.clear)
                 }
             )
-            .help("Clear list")
+            .macHelp("Clear list")
             if grocyVM.systemConfig?.featureFlagStock != false {
                 Button(
                     action: {
@@ -776,7 +777,7 @@ struct ShoppingListView: View {
                         Label("Add all list items to stock", systemImage: MySymbols.purchase)
                     }
                 )
-                .help("Add all list items to stock")
+                .macHelp("Add all list items to stock")
                 .disabled(itemsToPurchase.isEmpty)
             }
             Button(
@@ -790,7 +791,7 @@ struct ShoppingListView: View {
                     Label("Clear done items", systemImage: MySymbols.done)
                 }
             )
-            .help("Clear done items")
+            .macHelp("Clear done items")
             Button(
                 action: {
                     Task {
@@ -803,7 +804,7 @@ struct ShoppingListView: View {
                     Label("Add products that are below defined min. stock amount", systemImage: MySymbols.addToShoppingList)
                 }
             )
-            .help("Add products that are below defined min. stock amount")
+            .macHelp("Add products that are below defined min. stock amount")
             Button(
                 action: {
                     Task {
@@ -817,7 +818,7 @@ struct ShoppingListView: View {
                     Label("Add overdue/expired products", systemImage: MySymbols.addToShoppingList)
                 }
             )
-            .help("Add overdue/expired products")
+            .macHelp("Add overdue/expired products")
         }
     }
 
@@ -902,6 +903,7 @@ struct ShoppingListView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

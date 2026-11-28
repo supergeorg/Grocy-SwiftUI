@@ -204,7 +204,8 @@ struct BatteriesView: View {
                             Label("Charge", systemImage: MySymbols.batteryCharge)
                         }
                         .tint(.green)
-                        .accessibilityHint("Track charge cycle")
+                        // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                        .accessibilityLabel("Track charge cycle")
                     }
             }
         }
@@ -277,6 +278,7 @@ struct BatteriesView: View {
                     showingFilterSheet = true
                 } label: {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
                 sortGroupMenu
@@ -286,6 +288,7 @@ struct BatteriesView: View {
                     batteryInteractionRouter.present(.batteryJournal(batteryID: nil))
                 } label: {
                     Label("Batteries journal", systemImage: MySymbols.stockJournal)
+                        .macHelp("Batteries journal")
                 }
             }
         }
@@ -353,6 +356,7 @@ struct BatteriesView: View {
             #endif
         } label: {
             Label("Sort", systemImage: MySymbols.sort)
+                .macHelp("Sort")
         }
     }
 }

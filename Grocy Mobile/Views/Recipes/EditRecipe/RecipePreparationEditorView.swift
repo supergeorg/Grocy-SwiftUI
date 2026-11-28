@@ -191,6 +191,8 @@ struct WYSIWYGEditorView: View {
                     Image(systemName: MySymbols.dismissKeyboard)
                         .font(.callout.weight(.semibold))
                 }
+                .accessibilityLabel(Text("Hide keyboard"))
+                .macHelp("Hide keyboard")
                 .tint(.secondary)
                 .buttonStyle(FormattingButtonStyleAdditional())
             #endif
@@ -203,6 +205,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatBold)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Bold"))
+            .macHelp("Bold")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasBold))
 
@@ -211,6 +215,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatItalic)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Italic"))
+            .macHelp("Italic")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasItalic))
 
@@ -219,6 +225,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatUnderline)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Underline"))
+            .macHelp("Underline")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasUnderline))
 
@@ -227,6 +235,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatStrikethrough)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Strikethrough"))
+            .macHelp("Strikethrough")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasStrikethrough))
 
@@ -238,6 +248,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatBulletList)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Bulleted list"))
+            .macHelp("Bulleted list")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasUnorderedList))
 
@@ -246,6 +258,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatNumberedList)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Numbered list"))
+            .macHelp("Numbered list")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasOrderedList))
 
@@ -257,6 +271,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatAlignLeft)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Align left"))
+            .macHelp("Align left")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .left))
 
@@ -265,6 +281,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatAlignCenter)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Center"))
+            .macHelp("Center")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .center))
 
@@ -273,6 +291,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatAlignRight)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Align right"))
+            .macHelp("Align right")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .right))
 
@@ -281,6 +301,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatJustify)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Justify"))
+            .macHelp("Justify")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.textJustification == .full))
 
@@ -292,6 +314,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatIndentIncrease)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Increase indent"))
+            .macHelp("Increase indent")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
 
@@ -300,6 +324,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatIndentDecrease)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Decrease indent"))
+            .macHelp("Decrease indent")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
 
@@ -328,6 +354,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.link)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Insert link"))
+            .macHelp("Insert link")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyle(isSelected: bridge.formatting.hasLink))
 
@@ -339,6 +367,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.editorUndo)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Undo"))
+            .macHelp("Undo")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
 
@@ -347,6 +377,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.editorRedo)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Redo"))
+            .macHelp("Redo")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
 
@@ -355,6 +387,8 @@ struct WYSIWYGEditorView: View {
                 Image(systemName: MySymbols.formatClear)
                     .font(.callout.weight(.semibold))
             }
+            .accessibilityLabel(Text("Clear formatting"))
+            .macHelp("Clear formatting")
             .tint(.primary)
             .buttonStyle(FormattingButtonStyleAdditional())
         }
@@ -587,6 +621,8 @@ struct RawEditorView: View {
                         } label: {
                             Image(systemName: MySymbols.dismissKeyboard)
                         }
+                        .accessibilityLabel(Text("Hide keyboard"))
+                        .macHelp("Hide keyboard")
                         .tint(.secondary)
                         Spacer()
                     }

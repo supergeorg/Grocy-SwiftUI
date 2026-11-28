@@ -32,6 +32,8 @@ struct DueDateScanner: View {
                     Image(systemName: MySymbols.scanDate)
                 }
             )
+            .accessibilityLabel(Text("Scan due date"))
+            .macHelp("Scan due date")
             .sheet(
                 isPresented: $showDateScanner,
                 content: {

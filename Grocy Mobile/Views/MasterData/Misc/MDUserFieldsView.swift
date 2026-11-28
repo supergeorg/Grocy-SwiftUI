@@ -83,7 +83,10 @@ struct MDUserFieldsView: View {
                         action: {
                             showAddUserField.toggle()
                         },
-                        label: { Label("Create", systemImage: MySymbols.new) }
+                        label: {
+                            Label("Create", systemImage: MySymbols.new)
+                                .macHelp("Create")
+                        }
                     )
                 }
                 #if os(iOS)

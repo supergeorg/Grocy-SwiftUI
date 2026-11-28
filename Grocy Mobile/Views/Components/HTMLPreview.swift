@@ -208,6 +208,10 @@ struct HTMLPreviewView: View {
                         .onTapGesture {
                             withAnimation(.smooth) { fontScale = 1.0 }
                         }
+                        // Tapping the percentage resets it, so it's a button for VoiceOver.
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityHint(Text("Resets the text size to 100 %."))
+                        .macHelp("Reset text size")
                 }
                 .padding(.vertical, Spacing.xxSmall)
             }
@@ -221,6 +225,8 @@ struct HTMLPreviewView: View {
                         Image(systemName: MySymbols.fontSizeDecrease)
                             .frame(width: Sizes.minimumHitTarget, height: Sizes.minimumHitTarget)
                     }
+                    .accessibilityLabel(Text("Smaller text"))
+                    .macHelp("Smaller text")
                     .glassEffect(.regular.interactive(), in: .circle)
                     .disabled(fontScale <= minFontScale)
 
@@ -232,6 +238,8 @@ struct HTMLPreviewView: View {
                         Image(systemName: MySymbols.fontSizeIncrease)
                             .frame(width: Sizes.minimumHitTarget, height: Sizes.minimumHitTarget)
                     }
+                    .accessibilityLabel(Text("Larger text"))
+                    .macHelp("Larger text")
                     .glassEffect(.regular.interactive(), in: .circle)
                     .disabled(fontScale >= maxFontScale)
                 }

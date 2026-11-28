@@ -154,6 +154,7 @@ struct MDBatteriesView: View {
                     showAddBattery.toggle()
                 } label: {
                     Label("Create battery", systemImage: MySymbols.new)
+                        .macHelp("Create battery")
                 }
             }
             #if os(iOS)

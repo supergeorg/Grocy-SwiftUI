@@ -209,6 +209,7 @@ struct QuickScanModeView: View {
                                 qsActiveSheet = nil
                             } label: {
                                 Label("Resume", systemImage: MySymbols.quickScanPause)
+                                    .macHelp("Resume")
                             }
                         }
                         ToolbarSpacer(.fixed, placement: .topBarTrailing)

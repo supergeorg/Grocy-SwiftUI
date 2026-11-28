@@ -77,6 +77,7 @@ struct ServerSelectionView: View {
                         },
                         label: {
                             Label("Add server", systemImage: MySymbols.new)
+                                .macHelp("Add server")
                         }
                     )
                 }

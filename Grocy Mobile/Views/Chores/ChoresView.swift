@@ -284,7 +284,8 @@ struct ChoresView: View {
                         label: { Label("Skip", systemImage: MySymbols.choreSkipNext) }
                     )
                     .tint(.gray)
-                    .accessibilityHint("Skip next chore schedule")
+                    // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                    .accessibilityLabel("Skip next chore schedule")
                 }
                 .swipeActions(
                     edge: .leading,
@@ -299,7 +300,8 @@ struct ChoresView: View {
                         label: { Label("OK", systemImage: MySymbols.choreTrackNext) }
                     )
                     .tint(.green)
-                    .accessibilityHint("Track next chore schedule")
+                    // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                    .accessibilityLabel("Track next chore schedule")
                 }
             }
         }
@@ -357,6 +359,7 @@ struct ChoresView: View {
                     action: { showingFilterSheet = true },
                     label: {
                         Label("Filter", systemImage: MySymbols.filter)
+                            .macHelp("Filter")
                     }
                 )
                 .badge(numFilters)
@@ -369,6 +372,7 @@ struct ChoresView: View {
                     },
                     label: {
                         Label("Chores journal", systemImage: MySymbols.stockJournal)
+                            .macHelp("Chores journal")
                     }
                 )
             }
@@ -464,6 +468,7 @@ struct ChoresView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

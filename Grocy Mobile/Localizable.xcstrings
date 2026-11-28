@@ -7,6 +7,226 @@
     ":" : {
       "shouldTranslate" : false
     },
+    "Align left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linksbündig"
+          }
+        }
+      }
+    },
+    "Align right" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechtsbündig"
+          }
+        }
+      }
+    },
+    "Bold" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fett"
+          }
+        }
+      }
+    },
+    "Bulleted list" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufzählung"
+          }
+        }
+      }
+    },
+    "Center" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zentriert"
+          }
+        }
+      }
+    },
+    "Clear formatting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierung entfernen"
+          }
+        }
+      }
+    },
+    "Decrease indent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzug verkleinern"
+          }
+        }
+      }
+    },
+    "Hide keyboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastatur ausblenden"
+          }
+        }
+      }
+    },
+    "Increase indent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einzug vergrößern"
+          }
+        }
+      }
+    },
+    "Insert link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link einfügen"
+          }
+        }
+      }
+    },
+    "Italic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursiv"
+          }
+        }
+      }
+    },
+    "Justify" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocksatz"
+          }
+        }
+      }
+    },
+    "Larger text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größere Schrift"
+          }
+        }
+      }
+    },
+    "Numbered list" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nummerierte Liste"
+          }
+        }
+      }
+    },
+    "Redo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen"
+          }
+        }
+      }
+    },
+    "Reset text size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftgröße zurücksetzen"
+          }
+        }
+      }
+    },
+    "Resets the text size to 100 %." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setzt die Schriftgröße auf 100 % zurück."
+          }
+        }
+      }
+    },
+    "Scan due date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MHD scannen"
+          }
+        }
+      }
+    },
+    "Smaller text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleinere Schrift"
+          }
+        }
+      }
+    },
+    "Stock actions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandsaktionen"
+          }
+        }
+      }
+    },
+    "Strikethrough" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchgestrichen"
+          }
+        }
+      }
+    },
+    "Underline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterstrichen"
+          }
+        }
+      }
+    },
     "“%@” from the website was matched to the similar unit “%@”." : {
       "localizations" : {
         "de" : {
@@ -10705,7 +10925,14 @@
       }
     },
     "Add server" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server hinzufügen"
+          }
+        }
+      }
     },
     "Add this item to stock" : {
       "localizations" : {
@@ -16002,7 +16229,14 @@
       }
     },
     "Back" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück"
+          }
+        }
+      }
     },
     "Barcode" : {
       "localizations" : {
@@ -43218,7 +43452,14 @@
       }
     },
     "Import recipe from website" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rezept von Website importieren"
+          }
+        }
+      }
     },
     "Import this ingredient" : {
 
@@ -50499,7 +50740,14 @@
       }
     },
     "More" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr"
+          }
+        }
+      }
     },
     "Move on open" : {
       "localizations" : {
@@ -65682,7 +65930,14 @@
       }
     },
     "Resume" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortsetzen"
+          }
+        }
+      }
     },
     "Retrieving Details failed." : {
       "localizations" : {
@@ -66553,7 +66808,14 @@
 
     },
     "Scan barcode" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcode scannen"
+          }
+        }
+      }
     },
     "Scan token QR code" : {
 
@@ -68239,7 +68501,14 @@
       }
     },
     "Share" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        }
+      }
     },
     "Shop with your lists" : {
 
@@ -68795,7 +69064,14 @@
       }
     },
     "Show" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzeigen"
+          }
+        }
+      }
     },
     "Show a little checkbox next to each ingredient to mark it as done" : {
       "localizations" : {
@@ -71862,7 +72138,14 @@
 
     },
     "Start cooking" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kochen beginnen"
+          }
+        }
+      }
     },
     "Start date" : {
       "localizations" : {

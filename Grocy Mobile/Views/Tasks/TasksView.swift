@@ -330,7 +330,8 @@ struct TasksView: View {
                             }
                         )
                         .tint(.green)
-                        .accessibilityHint("Mark task as completed")
+                        // A swipe action is a VoiceOver action, which reads only its name: the short visible title gets a full one.
+                        .accessibilityLabel("Mark task as completed")
                     } else {
                         Button(
                             action: {
@@ -443,6 +444,7 @@ struct TasksView: View {
                         },
                         label: {
                             Label("Create task", systemImage: MySymbols.new)
+                                .macHelp("Create task")
                         }
                     )
                 }
@@ -455,6 +457,7 @@ struct TasksView: View {
                     action: { showingFilterSheet = true },
                     label: {
                         Label("Filter", systemImage: MySymbols.filter)
+                            .macHelp("Filter")
                     }
                 )
                 .badge(numFilters)
@@ -463,6 +466,7 @@ struct TasksView: View {
                     action: { showDoneTasks.toggle() },
                     label: {
                         Label("Show done tasks", systemImage: MySymbols.show)
+                            .macHelp("Show done tasks")
                             .symbolVariant(showDoneTasks ? .fill : .none)
                     }
                 )
@@ -556,6 +560,7 @@ struct TasksView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

@@ -172,6 +172,7 @@ struct BatteriesJournalView: View {
                     showingFilterSheet = true
                 } label: {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
             }
@@ -262,6 +263,7 @@ struct BatteriesJournalView: View {
             #endif
         } label: {
             Label("Sort", systemImage: MySymbols.sort)
+                .macHelp("Sort")
         }
     }
 }

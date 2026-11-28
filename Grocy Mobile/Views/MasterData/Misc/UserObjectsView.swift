@@ -112,6 +112,7 @@ struct UserObjectsView: View {
                     MDUserEntityFormView(isNewUserEntity: false, userEntity: userEntity, showAddUserEntity: .constant(false))
                 } label: {
                     Label("Edit userentity", systemImage: MySymbols.edit)
+                        .macHelp("Edit userentity")
                 }
             }
             ToolbarItem(placement: .primaryAction) {

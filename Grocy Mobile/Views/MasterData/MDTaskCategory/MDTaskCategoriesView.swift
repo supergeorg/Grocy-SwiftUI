@@ -150,6 +150,7 @@ struct MDTaskCategoriesView: View {
                         },
                         label: {
                             Label("Create task category", systemImage: MySymbols.new)
+                                .macHelp("Create task category")
                         }
                     )
                 }

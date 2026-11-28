@@ -179,7 +179,10 @@ struct StockProductInfoView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button(
                         action: { presentedInteraction = .editProduct(stockElement: stockElement) },
-                        label: { Label("Edit product", systemImage: MySymbols.edit) }
+                        label: {
+                            Label("Edit product", systemImage: MySymbols.edit)
+                                .macHelp("Edit product")
+                        }
                     )
                 }
             }
@@ -377,28 +380,43 @@ struct StockProductInfoView: View {
     private var stockActionButtons: some View {
         Button(
             action: { presentedInteraction = .productPurchase(stockElement: stockElement) },
-            label: { Label("Purchase", systemImage: MySymbols.purchase) }
+            label: {
+                Label("Purchase", systemImage: MySymbols.purchase)
+                    .macHelp("Purchase")
+            }
         )
         Button(
             action: { presentedInteraction = .productConsume(stockElement: stockElement) },
-            label: { Label("Consume", systemImage: MySymbols.consume) }
+            label: {
+                Label("Consume", systemImage: MySymbols.consume)
+                    .macHelp("Consume")
+            }
         )
         if features.locationTracking {
             Button(
                 action: { presentedInteraction = .productTransfer(stockElement: stockElement) },
-                label: { Label("Transfer", systemImage: MySymbols.transfer) }
+                label: {
+                    Label("Transfer", systemImage: MySymbols.transfer)
+                        .macHelp("Transfer")
+                }
             )
         }
         Button(
             action: { presentedInteraction = .productInventory(stockElement: stockElement) },
-            label: { Label("Inventory", systemImage: MySymbols.inventory) }
+            label: {
+                Label("Inventory", systemImage: MySymbols.inventory)
+                    .macHelp("Inventory")
+            }
         )
     }
 
     private var addToShoppingListButton: some View {
         Button(
             action: { presentedInteraction = .addToShL(stockElement: stockElement) },
-            label: { Label("Add to shopping list", systemImage: MySymbols.addToShoppingList) }
+            label: {
+                Label("Add to shopping list", systemImage: MySymbols.addToShoppingList)
+                    .macHelp("Add to shopping list")
+            }
         )
     }
 }

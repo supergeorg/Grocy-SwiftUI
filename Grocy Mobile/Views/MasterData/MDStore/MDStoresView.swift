@@ -186,6 +186,7 @@ struct MDStoresView: View {
                         },
                         label: {
                             Label("Create store", systemImage: MySymbols.new)
+                                .macHelp("Create store")
                         }
                     )
                 }

@@ -160,6 +160,7 @@ struct EquipmentView: View {
                     showAddEquipment.toggle()
                 } label: {
                     Label("Create equipment", systemImage: MySymbols.new)
+                        .macHelp("Create equipment")
                 }
             }
             #if os(iOS)

@@ -304,7 +304,7 @@ struct TransferProductView: View {
                         },
                         label: {
                             Label("Clear", systemImage: MySymbols.cancel)
-                                .help("Clear")
+                                .macHelp("Clear")
                         }
                     )
                     .keyboardShortcut("r", modifiers: [.command])
@@ -330,6 +330,7 @@ struct TransferProductView: View {
                         // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
                         // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
                         Label("Transfer", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.transfer)
+                            .macHelp("Transfer")
                             .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
                             .labelStyle(.titleAndIcon)
                     }

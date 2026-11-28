@@ -588,10 +588,18 @@ struct StockView: View {
             stockInteractionRouter.present(interaction)
         } label: {
             switch interaction {
-            case .inventoryProduct: Label("Inventory", systemImage: MySymbols.inventory)
-            case .transferProduct: Label("Transfer", systemImage: MySymbols.transfer)
-            case .consumeProduct: Label("Consume", systemImage: MySymbols.consume)
-            case .purchaseProduct: Label("Purchase", systemImage: MySymbols.purchase)
+            case .inventoryProduct:
+                Label("Inventory", systemImage: MySymbols.inventory)
+                    .macHelp("Inventory")
+            case .transferProduct:
+                Label("Transfer", systemImage: MySymbols.transfer)
+                    .macHelp("Transfer")
+            case .consumeProduct:
+                Label("Consume", systemImage: MySymbols.consume)
+                    .macHelp("Consume")
+            case .purchaseProduct:
+                Label("Purchase", systemImage: MySymbols.purchase)
+                    .macHelp("Purchase")
             default: EmptyView()
             }
         }
@@ -709,6 +717,7 @@ struct StockView: View {
             ToolbarItemGroup(placement: .navigation) {
                 Button(action: { showingFilterSheet = true }) {
                     Label("Filter", systemImage: MySymbols.filter)
+                        .macHelp("Filter")
                 }
                 .badge(numFilters)
                 sortMenu
@@ -721,6 +730,7 @@ struct StockView: View {
                     },
                     label: {
                         Label("Stock journal", systemImage: MySymbols.stockJournal)
+                            .macHelp("Stock journal")
                     }
                 )
             }
@@ -739,6 +749,7 @@ struct StockView: View {
                             }
                         } label: {
                             Label("Stock actions", systemImage: MySymbols.stockActions)
+                                .macHelp("Stock actions")
                         }
                     }
                     .matchedTransitionSource(id: StockInteractionZoom.actionsSourceID, in: stockInteractionTransition)
@@ -897,6 +908,7 @@ struct StockView: View {
             },
             label: {
                 Label("Sort", systemImage: MySymbols.sort)
+                    .macHelp("Sort")
             }
         )
     }

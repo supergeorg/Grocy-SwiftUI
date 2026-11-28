@@ -295,6 +295,7 @@ struct RecipeView: View {
                         showCooking = true
                     } label: {
                         Label("Start cooking", systemImage: MySymbols.cooking)
+                            .macHelp("Start cooking")
                     }
                     .buttonStyle(.glassProminent)
                 }
@@ -303,11 +304,13 @@ struct RecipeView: View {
                         showConsumeAllNeeded.toggle()
                     } label: {
                         Label("Consume all ingredients needed by this recipe", systemImage: MySymbols.consume)
+                            .macHelp("Consume all ingredients needed by this recipe")
                     }
                     Button {
                         showAddToShLSelection.toggle()
                     } label: {
                         Label("Put missing products on shopping list", systemImage: MySymbols.addToShoppingList)
+                            .macHelp("Put missing products on shopping list")
                     }
                     .disabled(enoughInStock)
                 }

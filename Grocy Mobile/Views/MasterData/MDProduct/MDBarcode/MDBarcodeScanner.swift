@@ -24,6 +24,8 @@ struct MDBarcodeScanner: View {
                     Image(systemName: MySymbols.barcodeScan)
                 }
             )
+            .accessibilityLabel(Text("Scan barcode"))
+            .macHelp("Scan barcode")
             .sheet(isPresented: $isShowingScanner) {
                 CodeScannerSheetView { result in
                     barcode = result.value

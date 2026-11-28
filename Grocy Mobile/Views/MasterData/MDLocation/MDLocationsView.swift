@@ -186,6 +186,7 @@ struct MDLocationsView: View {
                         },
                         label: {
                             Label("Create location", systemImage: MySymbols.new)
+                                .macHelp("Create location")
                         }
                     )
                 }

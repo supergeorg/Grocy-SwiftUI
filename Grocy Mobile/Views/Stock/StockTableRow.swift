@@ -227,7 +227,8 @@ struct StockTableRow: View {
                 {
                     Image(systemName: MySymbols.shoppingList)
                         .foregroundStyle(Color(.GrocyColors.grocyGray))
-                        .help("This product is currently on a shopping list.")
+                        .accessibilityLabel(Text("This product is currently on a shopping list."))
+                        .macHelp("This product is currently on a shopping list.")
                         .accessibilityLabel(Text("This product is currently on a shopping list."))
                 }
                 if !features.dueDateTracking {
