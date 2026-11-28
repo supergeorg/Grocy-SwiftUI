@@ -85,6 +85,8 @@ struct RecipePreparationEditorView: View {
                 }
             }
         }
+        // The editor fills the sheet, which on the Mac needs a size to fill.
+        .listSheetSize()
     }
 }
 
@@ -439,7 +441,14 @@ struct RichHTMLEditorRepresentable {
     }
 #else
     extension RichHTMLEditorRepresentable: NSViewRepresentable {
-        func makeNSView(context: Context) -> RichHTMLEditorView { makeEditor() }
+        func makeNSView(context: Context) -> RichHTMLEditorView {
+            let editor = makeEditor()
+            // The editor's intrinsic height is its content's, which SwiftUI otherwise keeps as the least height: a long text made
+            // the view taller than the window and pushed the mode picker and the text's beginning out of sight.
+            editor.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            editor.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            return editor
+        }
 
         func updateNSView(_ nsView: RichHTMLEditorView, context: Context) { updateEditor() }
 
