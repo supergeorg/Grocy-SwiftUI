@@ -121,6 +121,10 @@ struct HTMLPreviewView: View {
         var configuration = WebPage.Configuration()
         // The content is only displayed. Scripts in it don't run; the app's own calls still work.
         configuration.defaultNavigationPreferences.allowsContentJavaScript = false
+        #if os(macOS)
+            configuration.applicationNameForUserAgent = HTMLPreviewScrollForwarding.applicationName
+            HTMLPreviewScrollForwarding.install()
+        #endif
         page = WebPage(configuration: configuration, navigationDecider: ExternalLinkNavigationDecider(openURL: openURL))
         loadContent()
     }
@@ -253,6 +257,39 @@ private struct ExternalLinkNavigationDecider: WebPage.NavigationDeciding {
         return .cancel
     }
 }
+
+#if os(macOS)
+    /// On the Mac, a web view keeps the scrolling of the mouse and the trackpad while the pointer is over it, even when it has
+    /// nothing to scroll, so the list around a preparation or a note stopped scrolling there. The previews are as tall as their
+    /// content, so their scrolling goes to the scroll view around them instead. The rich text editor's web view isn't touched:
+    /// the previews are told apart by the application name in their user agent.
+    private enum HTMLPreviewScrollForwarding {
+        static let applicationName = "GrocyMobilePreview"
+        private static var monitor: Any?
+
+        static func install() {
+            guard monitor == nil else { return }
+            monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
+                // Local monitors run on the main thread.
+                let forwarded = MainActor.assumeIsolated {
+                    guard let scrollView = enclosingScrollView(ofPreviewAt: event) else { return false }
+                    scrollView.scrollWheel(with: event)
+                    return true
+                }
+                return forwarded ? nil : event
+            }
+        }
+
+        private static func enclosingScrollView(ofPreviewAt event: NSEvent) -> NSScrollView? {
+            var view = event.window?.contentView?.hitTest(event.locationInWindow)
+            while let current = view, !(current is WKWebView) {
+                view = current.superview
+            }
+            guard let webView = view as? WKWebView, webView.configuration.applicationNameForUserAgent == applicationName else { return nil }
+            return webView.enclosingScrollView
+        }
+    }
+#endif
 
 // MARK: - Extensions
 
