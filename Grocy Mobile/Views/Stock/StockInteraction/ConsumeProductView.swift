@@ -530,6 +530,12 @@ struct ConsumeProductView: View {
                     .keyboardShortcut("o", modifiers: [.command])
                 }
             }
+            #if os(macOS)
+                // Opening and consuming are separate actions, so they don't share a button group.
+                if features.openedTracking && consumeType == .both {
+                    ToolbarSpacer(.fixed, placement: .primaryAction)
+                }
+            #endif
             if (consumeType == .consume) || (consumeType == .both) {
                 ToolbarItem(id: "consume", placement: .primaryAction) {
                     Button(
