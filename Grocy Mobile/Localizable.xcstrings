@@ -52544,16 +52544,34 @@
       }
     },
     "No batteries" : {
-
-    },
-    "No battery defined. Create one in master data." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Batterien"
+          }
+        }
+      }
     },
     "No battery defined. Please create one." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Batterie angelegt. Bitte erstelle eine."
+          }
+        }
+      }
     },
     "No battery matches this filter." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Batterie passt zu diesem Filter."
+          }
+        }
+      }
     },
     "No charge cycles" : {
 
