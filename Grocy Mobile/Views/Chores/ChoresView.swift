@@ -44,6 +44,7 @@ struct ChoresView: View {
 
     @State private var searchString: String = ""
     @State private var showingFilterSheet = false
+    @State private var showAddChore = false
     @State private var filteredStatus: ChoreStatus = .all
     @State private var filteredUserID: Int? = nil
     @State private var sortOption: ChoresSortOption = .byName
@@ -308,11 +309,15 @@ struct ChoresView: View {
         .overlay {
             if grocyVM.failedToLoadObjects.filter({ dataToUpdate.contains($0) }).count == 0 {
                 if choresCount == 0 {
-                    // Chores are created in master data, so there's no create action here.
+                    // Like the master data lists: the chore form opens right here.
                     ContentUnavailableView {
                         Label("No chores", systemImage: MySymbols.chores)
                     } description: {
                         Text("No chore defined. Please create one.")
+                    } actions: {
+                        Button("Create chore") {
+                            showAddChore = true
+                        }
                     }
                 } else if chores.isEmpty {
                     ContentUnavailableView.search
@@ -376,6 +381,14 @@ struct ChoresView: View {
                     }
                 )
             }
+        }
+        .sheet(isPresented: $showAddChore, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
+                MDChoreFormView(isPopup: true)
+            }
+            #if os(macOS)
+                .presentationSizing(.form)
+            #endif
         }
         .sheet(isPresented: $showingFilterSheet) {
             NavigationStack {

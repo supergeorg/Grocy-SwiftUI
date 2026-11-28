@@ -45,6 +45,7 @@ struct BatteriesView: View {
     @State private var searchString: String = ""
     @State private var filteredStatus: BatteryStatus = .all
     @State private var showingFilterSheet = false
+    @State private var showAddBattery = false
     @State private var sortOption: BatteriesSortOption = .byName
     @State private var sortOrder: SortOrder = .forward
     @State private var trackedCount: Int = 0
@@ -212,11 +213,15 @@ struct BatteriesView: View {
         .overlay {
             if grocyVM.failedToLoadAdditionalObjects.filter({ additionalDataToUpdate.contains($0) }).count == 0 {
                 if batteriesCount == 0 {
-                    // Batteries are created in master data, so there's no create action here.
+                    // Like the master data lists: the battery form opens right here.
                     ContentUnavailableView {
                         Label("No batteries", systemImage: MySymbols.batteries)
                     } description: {
-                        Text("No battery defined. Create one in master data.")
+                        Text("No battery defined. Please create one.")
+                    } actions: {
+                        Button("Create battery") {
+                            showAddBattery = true
+                        }
                     }
                 } else if batteries.isEmpty {
                     ContentUnavailableView.search
@@ -291,6 +296,14 @@ struct BatteriesView: View {
                         .macHelp("Batteries journal")
                 }
             }
+        }
+        .sheet(isPresented: $showAddBattery, onDismiss: { Task { await updateData() } }) {
+            NavigationStack {
+                MDBatteryFormView(isPopup: true)
+            }
+            #if os(macOS)
+                .presentationSizing(.form)
+            #endif
         }
         .sheet(isPresented: $showingFilterSheet) {
             NavigationStack {
