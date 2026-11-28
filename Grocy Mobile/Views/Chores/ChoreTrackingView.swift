@@ -9,6 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct ChoreTrackingView: View {
+    /// Skipping is the secondary action on iOS. A Mac window shows secondary actions at the left, away from tracking.
+    private static var skipPlacement: ToolbarItemPlacement {
+        #if os(macOS)
+            .primaryAction
+        #else
+            .secondaryAction
+        #endif
+    }
+
     @Environment(GrocyViewModel.self) private var grocyVM
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
@@ -160,6 +169,28 @@ struct ChoreTrackingView: View {
                     }
                 )
             }
+            // On the Mac, both at the right like the other forms' actions, skipping before tracking, apart.
+            ToolbarItem(placement: Self.skipPlacement) {
+                Button(
+                    action: {
+                        Task {
+                            await trackChore(skipped: true)
+                        }
+                    },
+                    label: {
+                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
+                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
+                        Label("Skip next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreSkipNext)
+                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
+                    }
+                )
+                .accentColor(.gray)
+                .disabled(!isFormValid || isProcessingAction)
+                .keyboardShortcut("s", modifiers: [.command])
+            }
+            #if os(macOS)
+                ToolbarSpacer(.fixed, placement: .primaryAction)
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Button(
                     role: .confirm,
@@ -177,24 +208,6 @@ struct ChoreTrackingView: View {
                 )
                 .disabled(!isFormValid || isProcessingAction)
                 .keyboardShortcut("t", modifiers: [.command])
-            }
-            ToolbarItem(placement: .secondaryAction) {
-                Button(
-                    action: {
-                        Task {
-                            await trackChore(skipped: true)
-                        }
-                    },
-                    label: {
-                        // While it runs, the icon becomes an animated progress symbol. It stays an image: with a ProgressView as its icon,
-                        // the item loses its icon and leaves iPhone Duo's vertical bar for a text-only button at the bottom.
-                        Label("Skip next chore schedule", systemImage: isProcessingAction ? MySymbols.progress : MySymbols.choreSkipNext)
-                            .symbolEffect(.variableColor.iterative, isActive: isProcessingAction)
-                    }
-                )
-                .accentColor(.gray)
-                .disabled(!isFormValid || isProcessingAction)
-                .keyboardShortcut("s", modifiers: [.command])
             }
         })
         .sensoryFeedback(.success, trigger: isSuccessful == true)
